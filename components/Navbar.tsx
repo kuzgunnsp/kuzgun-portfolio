@@ -47,12 +47,23 @@ export default function Navbar() {
               strokeLinejoin="round"
             >
               {/* Geometrik Kuzgun Logosu */}
-              <path d="M50 15 L25 45 L50 35 L75 45 Z" fill="currentColor" fillOpacity="0.1" />
-              <path d="M25 45 L50 85 L50 35 Z" fill="currentColor" fillOpacity="0.05" />
-              <path d="M75 45 L50 85 L50 35 Z" fill="currentColor" fillOpacity="0.05" />
-              <path d="M25 45 L12 60 L32 50 Z" />
-              <path d="M75 45 L88 60 L68 50 Z" />
-              <circle cx="50" cy="32" r="1.5" fill="currentColor" />
+              {/* Baş & Gaga */}
+              <polygon points="50,15 44,24 50,32 56,24" fill="currentColor" fillOpacity="0.12" />
+              {/* Sol Kanat */}
+              <polygon points="40,28 22,12 8,55 32,48" fill="currentColor" fillOpacity="0.05" />
+              {/* Sağ Kanat */}
+              <polygon points="60,28 78,12 92,55 68,48" fill="currentColor" fillOpacity="0.05" />
+              {/* Gövde */}
+              <polygon points="50,32 32,48 50,68 68,48" fill="currentColor" fillOpacity="0.08" />
+              {/* Kuyruk */}
+              <polygon points="50,68 38,74 50,92 62,74" fill="currentColor" fillOpacity="0.1" />
+
+              {/* Kontur Çizgileri */}
+              <path d="M50 15 L44 24 L50 32 L56 24 Z" />
+              <path d="M40 28 L22 12 L8 55 L32 48 Z" />
+              <path d="M60 28 L78 12 L92 55 L68 48 Z" />
+              <path d="M50 68 L38 74 L50 92 L62 74 Z" />
+              <path d="M50 32 L50 68" />
             </svg>
           </div>
           <span className="text-sm font-semibold tracking-widest text-zinc-200 uppercase font-mono transition-colors duration-300 group-hover:text-white">
