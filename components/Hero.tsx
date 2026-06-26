@@ -6,32 +6,232 @@ export default function Hero() {
   // 3D Tilt / Mouse Takip Durum Yönetimi
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
 
+  // Terminal Durum Yönetimi
+  const [input, setInput] = useState("");
+  const [history, setHistory] = useState<string[]>([]);
+  const [isMatrix, setIsMatrix] = useState(false);
+  const [isAutotyping, setIsAutotyping] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Sayfa yüklendiğinde boot animasyonu
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      setMounted(true);
-    });
-    return () => cancelAnimationFrame(frame);
+    // Açılış boot satırları sırayla yazılır
+    const t1 = setTimeout(() => {
+      setHistory(["Initializing Kuzgun OS v1.0.0..."]);
+    }, 150);
+
+    const t2 = setTimeout(() => {
+      setHistory((prev) => [...prev, "Connecting to secure databases... Bağlantı kuruldu."]);
+    }, 550);
+
+    const t3 = setTimeout(() => {
+      setHistory((prev) => [
+        ...prev,
+        "KUZGUN terminaline hoş geldiniz.",
+        "Komutları görmek için 'help' yazın veya aşağıdaki butonları kullanın."
+      ]);
+    }, 950);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
+
+  // Terminal scroll ayarı
+  useEffect(() => {
+    terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history]);
+
+  // Matrix efekti canvas animasyonu
+  useEffect(() => {
+    if (!isMatrix || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      if (canvas.parentElement) {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+      }
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const katakana = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const alphabet = katakana.split("");
+    const fontSize = 12;
+    const columns = canvas.width / fontSize;
+
+    const rainDrops: number[] = [];
+    for (let x = 0; x < columns; x++) {
+      rainDrops[x] = 1;
+    }
+
+    let animationId: number;
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0f0"; // yeşil kod rengi
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    };
+
+    const animate = () => {
+      draw();
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, [isMatrix]);
+
+  // Komut yorumlayıcı (Command Parser)
+  const handleCommand = (commandStr: string) => {
+    const cmd = commandStr.trim();
+    if (!cmd) return;
+
+    const lowerCmd = cmd.toLowerCase();
+    const newHistory = [...history, `kuzgun@dev:~$ ${cmd}`];
+
+    if (lowerCmd === "clear") {
+      setHistory([]);
+      setInput("");
+      return;
+    }
+
+    if (lowerCmd === "help") {
+      newHistory.push(
+        "Kullanılabilir komutlar:",
+        "  about     - Geliştirici profilini görüntüle",
+        "  projects  - Portfolyo projelerini listele",
+        "  skills    - Teknik yetenekleri incele",
+        "  contact   - İletişim kanallarını göster",
+        "  matrix    - Matrix dijital yağmurunu aç/kapat",
+        "  clear     - Ekranı temizle"
+      );
+    } else if (lowerCmd === "about") {
+      newHistory.push(
+        "Kuzgun (Mustafa Duman) - Yazılım Geliştirici",
+        "Mobil uygulama, web platformları ve interaktif sistemler üzerine odaklanmış,",
+        "fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.",
+        "Sistem Hakkımda bölümüne yönlendiriliyor..."
+      );
+      setTimeout(() => {
+        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+      }, 800);
+    } else if (lowerCmd === "projects") {
+      newHistory.push(
+        "Tamamlanan Projeler Yükleniyor...",
+        "  - Lystra: Modern WooCommerce WordPress Teması",
+        "  - Namaz Vakitleri: Premium Tasarımlı Mobil Uygulama",
+        "  - Kuzgun Portfolio v1.0: Next.js ve TailwindCSS v4 Portfolyo",
+        "Sistem Projeler bölümüne yönlendiriliyor..."
+      );
+      setTimeout(() => {
+        document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+      }, 800);
+    } else if (lowerCmd === "skills") {
+      newHistory.push(
+        "Teknik Stack Yükleniyor...",
+        "  - Core: React, Next.js, TypeScript, Node.js",
+        "  - Mobile: React Native, Flutter, Swift, CoreData",
+        "  - Game/3D: Unity, C#, WebGL, Three.js, Canvas2D",
+        "Sistem Yetenekler bölümüne yönlendiriliyor..."
+      );
+      setTimeout(() => {
+        document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
+      }, 800);
+    } else if (lowerCmd === "contact") {
+      newHistory.push(
+        "İletişim Kanalları Bağlanıyor...",
+        "  - E-posta: hello@kuzgun.dev",
+        "  - LinkedIn: linkedin.com/in/mustafadumannn/",
+        "  - Bionluk: bionluk.com/mustafadumannn",
+        "Sistem İletişim bölümüne yönlendiriliyor..."
+      );
+      setTimeout(() => {
+        document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+      }, 800);
+    } else if (lowerCmd === "matrix") {
+      setIsMatrix(!isMatrix);
+      newHistory.push(
+        !isMatrix 
+          ? "Matrix Dijital Yağmuru aktif edildi. Çıkmak için tekrar 'matrix' yazın."
+          : "Matrix Dijital Yağmuru kapatıldı."
+      );
+    } else {
+      newHistory.push(`Komut bulunamadı: '${cmd}'. Seçenekler için 'help' yazın.`);
+    }
+
+    setHistory(newHistory);
+    setInput("");
+  };
+
+  // Otomatik Yazma Efekti (Autotyping Effect)
+  const triggerAutotype = (commandText: string) => {
+    if (isAutotyping) return;
+
+    if (isMatrix) {
+      setIsMatrix(false); // Matrix aktifse kapat
+    }
+
+    setIsAutotyping(true);
+    setInput("");
+    
+    let index = 0;
+    const interval = setInterval(() => {
+      setInput((prev) => prev + commandText[index]);
+      index++;
+      if (index >= commandText.length) {
+        clearInterval(interval);
+        setTimeout(() => {
+          handleCommand(commandText);
+          setIsAutotyping(false);
+        }, 150);
+      }
+    }, 60);
+  };
+
+  const focusTerminal = () => {
+    if (!isAutotyping) {
+      inputRef.current?.focus();
+    }
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    
-    // Farenin kartın merkezine olan uzaklığını hesapla (-0.5 ile 0.5 arasında)
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    
-    // X ekseninde yukarı/aşağı eğilme, Y ekseninde sol/sağ dönme açıları (Maksimum 25 derece)
     setRotate({
-      x: -y * 30,
-      y: x * 30,
+      x: -y * 16, // max 16 derece tilt
+      y: x * 16,
     });
   };
 
   const handleMouseLeave = () => {
-    // Fare alandan çıktığında pürüzsüzce eski konumuna sıfırla
     setRotate({ x: 0, y: 0 });
   };
 
@@ -92,217 +292,115 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* SAĞ SÜTUN: İnteraktif 3D Çizgisel SVG Kuzgun Origami Modeli */}
+        {/* SAĞ SÜTUN: İnteraktif 3D Terminal Kutusu */}
         <div 
           ref={containerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="w-full lg:w-[45%] flex items-center justify-center order-1 lg:order-2 cursor-grab active:cursor-grabbing py-8 lg:py-0"
+          className="w-full lg:w-[45%] flex items-center justify-center order-1 lg:order-2 py-8 lg:py-0"
           style={{ perspective: "1000px" }}
         >
           {/* 3D Dönüşüm Kapsayıcısı */}
           <div
-            className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] flex items-center justify-center transition-transform duration-200 ease-out"
+            className="relative w-full max-w-[460px] aspect-[4/3] sm:aspect-[16/11] flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/80 backdrop-blur-md transition-transform duration-200 ease-out shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden select-none cursor-pointer"
             style={{
               transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
               transformStyle: "preserve-3d",
             }}
+            onClick={focusTerminal}
           >
-            {/* Havada Asılı Kalma (Bobbing) Animasyonlu Gövde */}
-            <div className="w-full h-full animate-[bounce_6s_ease-in-out_infinite] flex items-center justify-center">
-              
-              {mounted ? (
-                <svg
-                  viewBox="0 0 200 200"
-                  className="w-full h-full text-zinc-100 drop-shadow-[0_20px_50px_rgba(0,0,0,0.95)]"
-                  fill="none"
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  <defs>
-                    {/* Takımyıldız çizgileri için yarı saydam parıltılı gradyan */}
-                    <linearGradient id="constellation-line-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.3" />
-                      <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.8" />
-                      <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.3" />
-                    </linearGradient>
+            {/* Terminal Üst Barı */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-900 bg-zinc-950/90 select-none">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+                <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
+              </div>
+              <span className="text-[10px] sm:text-xs font-mono text-zinc-500 tracking-wider select-none">
+                kuzgun@dev: ~ (bash)
+              </span>
+              <div className="w-12" />
+            </div>
 
-                    {/* Yıldız düğümleri için radial parlama gradyanı */}
-                    <radialGradient id="star-glow-grad" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#ffffff" />
-                      <stop offset="25%" stopColor="#ecfeff" />
-                      <stop offset="60%" stopColor="#0891b2" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#0891b2" stopOpacity="0" />
-                    </radialGradient>
-
-                    {/* Yıldız parıltısı için SVG filtresi */}
-                    <filter id="star-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur stdDeviation="1.8" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-
-                  {/* 3D Kanat Çırpma CSS Animasyonları */}
-                  <style>{`
-                    @keyframes plexusFlapLeft {
-                      0%, 100% {
-                        /* Kanat yukarıda ve hafif arkada */
-                        transform: rotateZ(0deg) rotateY(0deg) rotateX(0deg);
-                      }
-                      35% {
-                        /* Güçlü aşağı vuruş: aşağı iner ve öne bükülür */
-                        transform: rotateZ(30deg) rotateY(18deg) rotateX(-8deg);
-                      }
-                      50% {
-                        /* En alt nokta: hafifçe düzleşir */
-                        transform: rotateZ(34deg) rotateY(8deg) rotateX(-4deg);
-                      }
-                      75% {
-                        /* Yukarı vuruş: kanat geriye bükülür ve yukarı kalkar */
-                        transform: rotateZ(8deg) rotateY(-20deg) rotateX(5deg);
-                      }
-                    }
-                    @keyframes plexusFlapRight {
-                      0%, 100% {
-                        /* Kanat yukarıda */
-                        transform: rotateZ(0deg) rotateY(0deg) rotateX(0deg);
-                      }
-                      35% {
-                        /* Güçlü aşağı vuruş: aşağı iner ve öne bükülür */
-                        transform: rotateZ(-30deg) rotateY(-18deg) rotateX(-8deg);
-                      }
-                      50% {
-                        /* En alt nokta */
-                        transform: rotateZ(-34deg) rotateY(-8deg) rotateX(-4deg);
-                      }
-                      75% {
-                        /* Yukarı vuruş: geriye bükülüp kalkar */
-                        transform: rotateZ(-8deg) rotateY(20deg) rotateX(5deg);
-                      }
-                    }
-                    .wing-near-plexus {
-                      transform-origin: 90px 115px;
-                      animation: plexusFlapLeft 2.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-                      transform-style: preserve-3d;
-                    }
-                    .wing-far-plexus {
-                      transform-origin: 98px 112px;
-                      animation: plexusFlapRight 2.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-                      animation-delay: 0.08s; /* Organik aerodinamik gecikme (lag) */
-                      transform-style: preserve-3d;
-                      opacity: 0.75; /* Derinlik için arka kanat hafif saydam */
-                    }
-                  `}</style>
-
-                  {/* ================= GÖVDE VE KUYRUK GRUBU (STATİK TAKIMYILDIZ) ================= */}
-                  <g style={{ transformStyle: "preserve-3d" }}>
-                    {/* Gövde Plexus Çizgileri */}
-                    <path
-                      d="M30,115 L50,105 L48,115 Z M50,105 L56,103 L60,95 Z M50,105 L48,115 L60,115 M48,115 L56,103 L60,115 M56,103 L60,95 L72,100 L56,103 M72,100 L60,115 L70,130 L90,115 L72,100 M72,100 L90,115 L105,118 L72,100 M70,130 L85,145 L100,145 L90,115 M70,130 L90,115 L100,145 L70,130 M90,115 L105,118 L100,145 M105,118 L125,140 L100,145 Z M100,145 L102,155 L90,115 M102,155 L95,168 L88,178 M95,168 L102,178 M95,168 L95,182"
-                      stroke="url(#constellation-line-grad)"
-                      strokeWidth="0.8"
-                    />
-
-                    {/* Kuyruk Plexus Çizgileri */}
-                    <path
-                      d="M125,140 L140,150 L160,145 M125,140 L145,160 L170,155 M100,145 L145,160 L155,168 M100,145 L135,175 M160,145 L170,155 L155,168 L135,175 M140,150 L145,160 M140,150 L170,155 M145,160 L135,175"
-                      stroke="url(#constellation-line-grad)"
-                      strokeWidth="0.7"
-                    />
-
-                    {/* Gövde Yıldız Düğümleri (Glowing Star Nodes) */}
-                    <circle cx="30" cy="115" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee] animate-pulse" /> {/* Gaga Ucu */}
-                    <circle cx="50" cy="105" r="2" fill="#ffffff" />
-                    <circle cx="48" cy="115" r="2" fill="#ffffff" />
-                    <circle cx="60" cy="95" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee]" /> {/* Taç */}
-                    
-                    {/* KUZGUN GÖZÜ (Büyük ve Parlayan Özel Düğüm) */}
-                    <circle cx="56" cy="103" r="4.5" fill="url(#star-glow-grad)" />
-                    <circle cx="56" cy="103" r="1.8" fill="#ffffff" className="animate-ping" style={{ animationDuration: '3s' }} />
-                    <circle cx="56" cy="103" r="1.8" fill="#ffffff" />
-
-                    <circle cx="72" cy="100" r="2" fill="#ffffff" />
-                    <circle cx="60" cy="115" r="2" fill="#ffffff" />
-                    <circle cx="70" cy="130" r="2" fill="#ffffff" />
-                    <circle cx="85" cy="145" r="2" fill="#ffffff" />
-                    <circle cx="90" cy="115" r="2.5" className="fill-white drop-shadow-[0_0_6px_#22d3ee] animate-pulse" /> {/* Omuz Yakın */}
-                    <circle cx="98" cy="112" r="2.5" className="fill-white drop-shadow-[0_0_6px_#22d3ee] opacity-75" /> {/* Omuz Uzak */}
-                    <circle cx="105" cy="118" r="2" fill="#ffffff" />
-                    <circle cx="100" cy="145" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee] animate-pulse" />
-                    <circle cx="125" cy="140" r="2.5" className="fill-white drop-shadow-[0_0_6px_#22d3ee] animate-pulse" />
-                    <circle cx="102" cy="155" r="2" fill="#ffffff" />
-                    <circle cx="95" cy="168" r="2" fill="#ffffff" />
-                    <circle cx="88" cy="178" r="1.8" fill="#ffffff" />
-                    <circle cx="102" cy="178" r="1.8" fill="#ffffff" />
-                    <circle cx="95" cy="182" r="1.8" fill="#ffffff" />
-
-                    {/* Kuyruk Yıldız Düğümleri */}
-                    <circle cx="140" cy="150" r="2" fill="#ffffff" />
-                    <circle cx="145" cy="160" r="2" fill="#ffffff" />
-                    <circle cx="160" cy="145" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee]" />
-                    <circle cx="170" cy="155" r="2.5" className="fill-white drop-shadow-[0_0_6px_#22d3ee] animate-pulse" />
-                    <circle cx="155" cy="168" r="2" fill="#ffffff" />
-                    <circle cx="135" cy="175" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee] animate-pulse" />
-                  </g>
-
-                  {/* ================= UZAK KANAT GRUBU (3D FLAPPING PLEXUS - ARKA) ================= */}
-                  <g className="wing-far-plexus">
-                    {/* Uzak Kanat Çizgileri */}
-                    <path
-                      d="M98,112 L92,90 L86,65 L82,40 M86,65 L72,60 L82,40 M86,65 L70,50 L72,60 M86,65 L76,78 L62,62 L70,50 M92,90 L76,78 M92,90 L80,95 L76,78 M76,78 L58,75 L62,62 M80,95 L58,88 L76,78 M58,75 L58,88 M98,112 L80,95 M98,112 L64,100 L80,95 M58,88 L64,100"
-                      stroke="url(#constellation-line-grad)"
-                      strokeWidth="0.7"
-                    />
-
-                    {/* Uzak Kanat Düğümleri */}
-                    <circle cx="92" cy="90" r="2" fill="#ffffff" />
-                    <circle cx="86" cy="65" r="2" fill="#ffffff" />
-                    <circle cx="82" cy="40" r="2.5" className="fill-white drop-shadow-[0_0_6px_#22d3ee] animate-pulse" /> {/* Kanat Ucu */}
-                    <circle cx="70" cy="50" r="2" fill="#ffffff" />
-                    <circle cx="62" cy="62" r="2" fill="#ffffff" />
-                    <circle cx="58" cy="75" r="2" fill="#ffffff" />
-                    <circle cx="58" cy="88" r="2" fill="#ffffff" />
-                    <circle cx="64" cy="100" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee]" />
-                    <circle cx="80" cy="95" r="2" fill="#ffffff" />
-                    <circle cx="76" cy="78" r="2" fill="#ffffff" />
-                    <circle cx="72" cy="60" r="2" fill="#ffffff" />
-                  </g>
-
-                  {/* ================= YAKIN KANAT GRUBU (3D FLAPPING PLEXUS - ÖN) ================= */}
-                  <g className="wing-near-plexus">
-                    {/* Yakın Kanat Çizgileri */}
-                    <path
-                      d="M90,115 L110,85 L135,60 L155,30 M135,60 L150,55 L155,30 M135,60 L165,42 L150,55 M135,60 L142,70 L168,55 L165,42 M110,85 L128,85 L142,70 M128,85 L164,68 L142,70 M168,55 L164,68 M110,85 L115,98 L128,85 M115,98 L155,80 L128,85 M164,68 L155,80 M90,115 L115,98 M90,115 L128,102 L115,98 M155,80 L128,102 M128,102 L142,92 L155,80"
-                      stroke="url(#constellation-line-grad)"
-                      strokeWidth="0.85"
-                    />
-
-                    {/* Yakın Kanat Düğümleri */}
-                    <circle cx="110" cy="85" r="2" fill="#ffffff" />
-                    <circle cx="135" cy="60" r="2" fill="#ffffff" />
-                    <circle cx="155" cy="30" r="2.8" className="fill-white drop-shadow-[0_0_6px_#22d3ee] animate-pulse" /> {/* Kanat Ucu Ana */}
-                    <circle cx="165" cy="42" r="2" fill="#ffffff" />
-                    <circle cx="168" cy="55" r="2" fill="#ffffff" />
-                    <circle cx="164" cy="68" r="2" fill="#ffffff" />
-                    <circle cx="155" cy="80" r="2" fill="#ffffff" />
-                    <circle cx="142" cy="92" r="2" fill="#ffffff" />
-                    <circle cx="128" cy="102" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee]" />
-                    <circle cx="115" cy="98" r="2" fill="#ffffff" />
-                    <circle cx="128" cy="85" r="2" fill="#ffffff" />
-                    <circle cx="142" cy="70" r="2" fill="#ffffff" />
-                    <circle cx="150" cy="55" r="2.2" className="fill-white drop-shadow-[0_0_4px_#22d3ee]" />
-                  </g>
-                </svg>
-              ) : (
-                <div className="w-full h-full" />
+            {/* Terminal Gövdesi */}
+            <div className="relative flex-1 p-4 overflow-hidden font-mono text-xs sm:text-sm leading-relaxed text-zinc-300">
+              {/* Matrix Canvas */}
+              {isMatrix && (
+                <canvas
+                  ref={canvasRef}
+                  className="absolute inset-0 z-0 pointer-events-none"
+                  style={{ mixBlendMode: "screen" }}
+                />
               )}
 
-              {/* Kuzgunun Arkasındaki Parıldayan Küçük Yıldızlar (Faint Constellation Nodes) */}
-              <div className="absolute top-10 left-10 w-1 h-1 bg-white/35 rounded-full animate-ping"></div>
-              <div className="absolute bottom-12 right-8 w-1.5 h-1.5 bg-white/20 rounded-full animate-pulse [animation-delay:2s]"></div>
-              <div className="absolute top-1/2 left-4 w-1 h-1 bg-white/40 rounded-full animate-pulse"></div>
+              {/* Terminal İçeriği */}
+              <div className="relative z-10 w-full h-full flex flex-col justify-between">
+                <div className="flex-1 overflow-y-auto max-h-[160px] sm:max-h-[220px] pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
+                  {history.map((line, idx) => (
+                    <div
+                      key={idx}
+                      className={`whitespace-pre-wrap ${
+                        line.startsWith("kuzgun@dev:")
+                          ? "text-zinc-100 font-semibold"
+                          : line.startsWith("  -")
+                          ? "text-amber-500/90"
+                          : line.startsWith("  about") || line.startsWith("  projects")
+                          ? "text-emerald-400"
+                          : "text-zinc-400"
+                      }`}
+                    >
+                      {line}
+                    </div>
+                  ))}
+                  <div ref={terminalEndRef} />
+                </div>
+
+                {/* Giriş Satırı */}
+                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-zinc-900/50 relative z-20">
+                  <span className="text-zinc-100 font-semibold shrink-0 select-none">kuzgun@dev:~$</span>
+                  <div className="flex-1 flex items-center relative">
+                    <span className="text-emerald-400 font-semibold">{input}</span>
+                    {/* Yanıp Sönen İmleç */}
+                    <span className="w-2 h-4 sm:h-5 bg-emerald-400 ml-1 animate-[pulse_1s_infinite] shrink-0" />
+                    
+                    {/* Gizli Input */}
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={input}
+                      onChange={(e) => !isAutotyping && setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !isAutotyping) {
+                          handleCommand(input);
+                        }
+                      }}
+                      className="absolute inset-0 opacity-0 cursor-default focus:outline-none"
+                      disabled={isAutotyping}
+                      autoFocus
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Hızlı Erişim Barı */}
+            <div className="px-4 py-3 bg-zinc-950/95 border-t border-zinc-900 flex flex-wrap items-center gap-2 relative z-30 select-none">
+              <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider shrink-0 mr-1 select-none">
+                HIZLI ERİŞİM:
+              </span>
+              {["help", "about", "projects", "skills", "contact", "matrix"].map((cmd) => (
+                <button
+                  key={cmd}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    triggerAutotype(cmd);
+                  }}
+                  disabled={isAutotyping}
+                  className="px-2.5 py-1 text-[10px] sm:text-xs font-mono rounded bg-zinc-900/50 border border-zinc-800/80 text-zinc-400 hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                >
+                  {cmd}
+                </button>
+              ))}
             </div>
           </div>
         </div>
