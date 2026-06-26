@@ -126,6 +126,11 @@ export default function Contact() {
   
   const emailCardRef = useRef<HTMLDivElement>(null);
   const [emailMousePos, setEmailMousePos] = useState({ x: 0, y: 0 });
+  const [mounted, setMounted] = useState(false);
+  
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleEmailMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!emailCardRef.current) return;
@@ -249,31 +254,35 @@ export default function Contact() {
         {/* Alt Footer Barı */}
         <div className="border-t border-zinc-900/60 pt-12 flex flex-col sm:flex-row items-center justify-between gap-6 text-[10px] md:text-xs font-mono text-zinc-600">
           <div className="flex items-center gap-3">
-            <svg
-              viewBox="0 0 100 100"
-              className="h-6 w-6 text-zinc-700"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {/* KUZGUN Binary Emblem (Raven Head made of 1 and 0) */}
-              {/* Head circular loop (representing 0) */}
-              <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="2" strokeDasharray="160 40 10 30" />
-              
-              {/* Beak & Neck (representing 1) */}
-              <path d="M50 18 L50 82 M50 50 L24 68" stroke="currentColor" strokeWidth="2.5" />
-              
-              {/* Eye (glowing node) */}
-              <circle cx="50" cy="50" r="4" fill="currentColor" />
-              
-              {/* Binary bits around the head */}
-              <text x="20" y="38" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">1</text>
-              <text x="76" y="38" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">0</text>
-              <text x="24" y="70" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">0</text>
-              <text x="72" y="70" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">1</text>
-            </svg>
+            {mounted ? (
+              <svg
+                viewBox="0 0 100 100"
+                className="h-6 w-6 text-zinc-700"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* KUZGUN Binary Emblem (Raven Head made of 1 and 0) */}
+                {/* Head circular loop (representing 0) */}
+                <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="2" strokeDasharray="160 40 10 30" />
+                
+                {/* Beak & Neck (representing 1) */}
+                <path d="M50 18 L50 82 M50 50 L24 68" stroke="currentColor" strokeWidth="2.5" />
+                
+                {/* Eye (glowing node) */}
+                <circle cx="50" cy="50" r="4" fill="currentColor" />
+                
+                {/* Binary bits around the head */}
+                <text x="20" y="38" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">1</text>
+                <text x="76" y="38" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">0</text>
+                <text x="24" y="70" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">0</text>
+                <text x="72" y="70" className="text-[10px] font-mono fill-zinc-800 font-bold" stroke="none">1</text>
+              </svg>
+            ) : (
+              <div className="w-6 h-6" />
+            )}
             <span>© {new Date().getFullYear()} KUZGUN. Tüm hakları saklıdır.</span>
           </div>
           <span className="text-center sm:text-right">

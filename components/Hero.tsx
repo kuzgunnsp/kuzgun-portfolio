@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function Hero() {
   // 3D Tilt / Mouse Takip Durum Yönetimi
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -103,122 +108,125 @@ export default function Hero() {
             {/* Havada Asılı Kalma (Bobbing) Animasyonlu Gövde */}
             <div className="w-full h-full animate-[bounce_6s_ease-in-out_infinite] flex items-center justify-center">
               
-              {/* Geometrik Çizgisel ve Çokgenli Kuzgun Origami Modeli */}
-              <svg
-                viewBox="0 0 100 100"
-                className="w-full h-full text-zinc-100 drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {/* 3D Katman Derinliği Oluşturmak İçin Faset Çokgenleri */}
-                
-                {/* Baş & Gaga Faseti (Açık İndigo Işıklı) */}
-                <polygon points="50,15 44,24 50,32 56,24" fill="currentColor" fillOpacity="0.15" className="text-indigo-400" />
-                <polygon points="44,24 50,32 50,36 42,30" fill="currentColor" fillOpacity="0.08" />
-                <polygon points="56,24 50,32 50,36 58,30" fill="currentColor" fillOpacity="0.08" />
-                
-                {/* Göğüs/Gövde Faseti */}
-                <polygon points="50,36 42,30 50,48 58,30" fill="currentColor" fillOpacity="0.08" />
-                <polygon points="50,48 43,62 50,68 57,62" fill="currentColor" fillOpacity="0.05" />
-                
-                {/* Sol Kanat Fasetleri */}
-                <polygon points="40,28 22,12 32,48" fill="currentColor" fillOpacity="0.08" />
-                <polygon points="22,12 8,55 32,48" fill="currentColor" fillOpacity="0.04" />
-                <polygon points="8,55 15,60 32,48" fill="currentColor" fillOpacity="0.03" />
-                <polygon points="15,60 26,58 32,48" fill="currentColor" fillOpacity="0.02" />
-                
-                {/* Sağ Kanat Fasetleri */}
-                <polygon points="60,28 78,12 68,48" fill="currentColor" fillOpacity="0.08" />
-                <polygon points="78,12 92,55 68,48" fill="currentColor" fillOpacity="0.04" />
-                <polygon points="92,55 85,60 68,48" fill="currentColor" fillOpacity="0.03" />
-                <polygon points="85,60 74,58 68,48" fill="currentColor" fillOpacity="0.02" />
-                
-                {/* Diamond Kuyruk Fasetleri */}
-                <polygon points="43,62 50,68 38,74 50,92" fill="currentColor" fillOpacity="0.06" />
-                <polygon points="57,62 50,68 62,74 50,92" fill="currentColor" fillOpacity="0.06" />
-
-                {/* Kafes Görünümü Veren Ekstrüzyon Geometrik Bağlantı Çizgileri */}
-                {/* Ana Çizgiler */}
-                <line x1="50" y1="15" x2="50" y2="32" stroke="currentColor" strokeWidth="1.2" />
-                <line x1="44" y1="24" x2="50" y2="32" stroke="currentColor" strokeWidth="0.8" />
-                <line x1="56" y1="24" x2="50" y2="32" stroke="currentColor" strokeWidth="0.8" />
-                
-                {/* Sol Kanat Çizgileri */}
-                <line x1="40" y1="28" x2="22" y2="12" stroke="currentColor" strokeWidth="1" />
-                <line x1="22" y1="12" x2="8" y2="55" stroke="currentColor" strokeWidth="1" />
-                <line x1="8" y1="55" x2="15" y2="60" stroke="currentColor" strokeWidth="0.6" />
-                <line x1="15" y1="60" x2="26" y2="58" stroke="currentColor" strokeWidth="0.6" />
-                <line x1="26" y1="58" x2="43" y2="62" stroke="currentColor" strokeWidth="0.6" />
-                
-                {/* Sağ Kanat Çizgileri */}
-                <line x1="60" y1="28" x2="78" y2="12" stroke="currentColor" strokeWidth="1" />
-                <line x1="78" y1="12" x2="92" y2="55" stroke="currentColor" strokeWidth="1" />
-                <line x1="92" y1="55" x2="85" y2="60" stroke="currentColor" strokeWidth="0.6" />
-                <line x1="85" y1="60" x2="74" y2="58" stroke="currentColor" strokeWidth="0.6" />
-                <line x1="74" y1="58" x2="57" y2="62" stroke="currentColor" strokeWidth="0.6" />
-                
-                {/* Omurga ve Kuyruk Çizgileri */}
-                <line x1="38" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
-                <line x1="62" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
-                
-                {/* İkincil İnce Bağlantı Çizgileri */}
-                <line x1="22" y1="12" x2="50" y2="36" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                <line x1="78" y1="12" x2="50" y2="36" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                <line x1="8" y1="55" x2="50" y2="48" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                <line x1="92" y1="55" x2="50" y2="48" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                <line x1="32" y1="48" x2="43" y2="62" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
-                <line x1="68" y1="48" x2="57" y2="62" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
-                
-                <line x1="44" y1="24" x2="22" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
-                <line x1="56" y1="24" x2="78" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
-
-                {/* 1 ve 0 Kodlama Matrisi (Omurga / Spine ve Göğüs Kafesi olarak) */}
-                <g stroke="none" className="font-mono text-[5.5px] fill-zinc-400 font-bold" textAnchor="middle">
-                  <text x="50" y="38" className="fill-indigo-400/80 animate-pulse">1</text>
-                  <text x="50" y="44">0</text>
-                  <text x="50" y="50">1</text>
-                  <text x="50" y="56">1</text>
-                  <text x="50" y="62">0</text>
-                  <text x="50" y="68" className="fill-emerald-400/80 animate-pulse">1</text>
-                </g>
-                
-                {/* Kanatlardan süzülen binary veri akışları */}
-                <g stroke="none" className="font-mono text-[3.5px] fill-zinc-600 font-semibold" textAnchor="middle" opacity="0.6">
-                  {/* Sol Kanat Akışı */}
-                  <text x="24" y="24">0</text>
-                  <text x="20" y="32">1</text>
-                  <text x="16" y="40">0</text>
-                  <text x="12" y="48">1</text>
+              {mounted ? (
+                <svg
+                  viewBox="0 0 100 100"
+                  className="w-full h-full text-zinc-100 drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {/* 3D Katman Derinliği Oluşturmak İçin Faset Çokgenleri */}
                   
-                  {/* Sağ Kanat Akışı */}
-                  <text x="76" y="24">1</text>
-                  <text x="80" y="32">0</text>
-                  <text x="84" y="40">1</text>
-                  <text x="88" y="48">0</text>
-                </g>
+                  {/* Baş & Gaga Faseti (Açık İndigo Işıklı) */}
+                  <polygon points="50,15 44,24 50,32 56,24" fill="currentColor" fillOpacity="0.15" className="text-indigo-400" />
+                  <polygon points="44,24 50,32 50,36 42,30" fill="currentColor" fillOpacity="0.08" />
+                  <polygon points="56,24 50,32 50,36 58,30" fill="currentColor" fillOpacity="0.08" />
+                  
+                  {/* Göğüs/Gövde Faseti */}
+                  <polygon points="50,36 42,30 50,48 58,30" fill="currentColor" fillOpacity="0.08" />
+                  <polygon points="50,48 43,62 50,68 57,62" fill="currentColor" fillOpacity="0.05" />
+                  
+                  {/* Sol Kanat Fasetleri */}
+                  <polygon points="40,28 22,12 32,48" fill="currentColor" fillOpacity="0.08" />
+                  <polygon points="22,12 8,55 32,48" fill="currentColor" fillOpacity="0.04" />
+                  <polygon points="8,55 15,60 32,48" fill="currentColor" fillOpacity="0.03" />
+                  <polygon points="15,60 26,58 32,48" fill="currentColor" fillOpacity="0.02" />
+                  
+                  {/* Sağ Kanat Fasetleri */}
+                  <polygon points="60,28 78,12 68,48" fill="currentColor" fillOpacity="0.08" />
+                  <polygon points="78,12 92,55 68,48" fill="currentColor" fillOpacity="0.04" />
+                  <polygon points="92,55 85,60 68,48" fill="currentColor" fillOpacity="0.03" />
+                  <polygon points="85,60 74,58 68,48" fill="currentColor" fillOpacity="0.02" />
+                  
+                  {/* Diamond Kuyruk Fasetleri */}
+                  <polygon points="43,62 50,68 38,74 50,92" fill="currentColor" fillOpacity="0.06" />
+                  <polygon points="57,62 50,68 62,74 50,92" fill="currentColor" fillOpacity="0.06" />
 
-                {/* Göğüs kafesi üzerinde KUZGUN kelimesinin sıkıştırılmış / gömülmüş hali */}
-                <path d="M34 50 L31 50 L31 56 L34 56 M66 50 L69 50 L69 56 L66 56" stroke="currentColor" strokeWidth="0.4" opacity="0.6" />
-                <g stroke="none" className="font-mono text-[4.5px] fill-zinc-100 font-extrabold tracking-[0.2em]" textAnchor="middle">
-                  <text x="50" y="54.5" className="animate-pulse">KUZGUN</text>
-                </g>
+                  {/* Kafes Görünümü Veren Ekstrüzyon Geometrik Bağlantı Çizgileri */}
+                  {/* Ana Çizgiler */}
+                  <line x1="50" y1="15" x2="50" y2="32" stroke="currentColor" strokeWidth="1.2" />
+                  <line x1="44" y1="24" x2="50" y2="32" stroke="currentColor" strokeWidth="0.8" />
+                  <line x1="56" y1="24" x2="50" y2="32" stroke="currentColor" strokeWidth="0.8" />
+                  
+                  {/* Sol Kanat Çizgileri */}
+                  <line x1="40" y1="28" x2="22" y2="12" stroke="currentColor" strokeWidth="1" />
+                  <line x1="22" y1="12" x2="8" y2="55" stroke="currentColor" strokeWidth="1" />
+                  <line x1="8" y1="55" x2="15" y2="60" stroke="currentColor" strokeWidth="0.6" />
+                  <line x1="15" y1="60" x2="26" y2="58" stroke="currentColor" strokeWidth="0.6" />
+                  <line x1="26" y1="58" x2="43" y2="62" stroke="currentColor" strokeWidth="0.6" />
+                  
+                  {/* Sağ Kanat Çizgileri */}
+                  <line x1="60" y1="28" x2="78" y2="12" stroke="currentColor" strokeWidth="1" />
+                  <line x1="78" y1="12" x2="92" y2="55" stroke="currentColor" strokeWidth="1" />
+                  <line x1="92" y1="55" x2="85" y2="60" stroke="currentColor" strokeWidth="0.6" />
+                  <line x1="85" y1="60" x2="74" y2="58" stroke="currentColor" strokeWidth="0.6" />
+                  <line x1="74" y1="58" x2="57" y2="62" stroke="currentColor" strokeWidth="0.6" />
+                  
+                  {/* Omurga ve Kuyruk Çizgileri */}
+                  <line x1="38" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
+                  <line x1="62" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
+                  
+                  {/* İkincil İnce Bağlantı Çizgileri */}
+                  <line x1="22" y1="12" x2="50" y2="36" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
+                  <line x1="78" y1="12" x2="50" y2="36" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
+                  <line x1="8" y1="55" x2="50" y2="48" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
+                  <line x1="92" y1="55" x2="50" y2="48" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
+                  <line x1="32" y1="48" x2="43" y2="62" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
+                  <line x1="68" y1="48" x2="57" y2="62" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
+                  
+                  <line x1="44" y1="24" x2="22" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
+                  <line x1="56" y1="24" x2="78" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
 
-                {/* Bağlantı Düğümleri (Küçük Yıldız Noktaları) */}
-                <circle cx="50" cy="32" r="1.2" fill="#f59e0b" className="animate-ping" />
-                <circle cx="50" cy="32" r="1.2" fill="#f59e0b" />
-                <circle cx="50" cy="15" r="1" fill="currentColor" />
-                <circle cx="22" cy="12" r="1.2" fill="currentColor" />
-                <circle cx="78" cy="12" r="1.2" fill="currentColor" />
-                <circle cx="8" cy="55" r="1" fill="currentColor" />
-                <circle cx="92" cy="55" r="1" fill="currentColor" />
-                <circle cx="38" cy="74" r="0.8" fill="currentColor" />
-                <circle cx="62" cy="74" r="0.8" fill="currentColor" />
-                <circle cx="50" cy="92" r="1.2" fill="#10b981" />
-                <circle cx="50" cy="92" r="1.2" fill="#10b981" className="animate-ping" />
-              </svg>
+                  {/* 1 ve 0 Kodlama Matrisi (Omurga / Spine ve Göğüs Kafesi olarak) */}
+                  <g stroke="none" className="font-mono text-[5.5px] fill-zinc-400 font-bold" textAnchor="middle">
+                    <text x="50" y="38" className="fill-indigo-400/80 animate-pulse">1</text>
+                    <text x="50" y="44">0</text>
+                    <text x="50" y="50">1</text>
+                    <text x="50" y="56">1</text>
+                    <text x="50" y="62">0</text>
+                    <text x="50" y="68" className="fill-emerald-400/80 animate-pulse">1</text>
+                  </g>
+                  
+                  {/* Kanatlardan süzülen binary veri akışları */}
+                  <g stroke="none" className="font-mono text-[3.5px] fill-zinc-600 font-semibold" textAnchor="middle" opacity="0.6">
+                    {/* Sol Kanat Akışı */}
+                    <text x="24" y="24">0</text>
+                    <text x="20" y="32">1</text>
+                    <text x="16" y="40">0</text>
+                    <text x="12" y="48">1</text>
+                    
+                    {/* Sağ Kanat Akışı */}
+                    <text x="76" y="24">1</text>
+                    <text x="80" y="32">0</text>
+                    <text x="84" y="40">1</text>
+                    <text x="88" y="48">0</text>
+                  </g>
+
+                  {/* Göğüs kafesi üzerinde KUZGUN kelimesinin sıkıştırılmış / gömülmüş hali */}
+                  <path d="M34 50 L31 50 L31 56 L34 56 M66 50 L69 50 L69 56 L66 56" stroke="currentColor" strokeWidth="0.4" opacity="0.6" />
+                  <g stroke="none" className="font-mono text-[4.5px] fill-zinc-100 font-extrabold tracking-[0.2em]" textAnchor="middle">
+                    <text x="50" y="54.5" className="animate-pulse">KUZGUN</text>
+                  </g>
+
+                  {/* Bağlantı Düğümleri (Küçük Yıldız Noktaları) */}
+                  <circle cx="50" cy="32" r="1.2" fill="#f59e0b" className="animate-ping" />
+                  <circle cx="50" cy="32" r="1.2" fill="#f59e0b" />
+                  <circle cx="50" cy="15" r="1" fill="currentColor" />
+                  <circle cx="22" cy="12" r="1.2" fill="currentColor" />
+                  <circle cx="78" cy="12" r="1.2" fill="currentColor" />
+                  <circle cx="8" cy="55" r="1" fill="currentColor" />
+                  <circle cx="92" cy="55" r="1" fill="currentColor" />
+                  <circle cx="38" cy="74" r="0.8" fill="currentColor" />
+                  <circle cx="62" cy="74" r="0.8" fill="currentColor" />
+                  <circle cx="50" cy="92" r="1.2" fill="#10b981" />
+                  <circle cx="50" cy="92" r="1.2" fill="#10b981" className="animate-ping" />
+                </svg>
+              ) : (
+                <div className="w-full h-full" />
+              )}
 
               {/* Kuzgunun Arkasındaki Parıldayan Küçük Yıldızlar (Faint Constellation Nodes) */}
               <div className="absolute top-10 left-10 w-1 h-1 bg-white/35 rounded-full animate-ping"></div>

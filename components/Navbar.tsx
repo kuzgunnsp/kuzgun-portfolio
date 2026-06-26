@@ -5,8 +5,10 @@ import React, { useState, useEffect } from "react";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       if (window.scrollY > 20) {
         setIsScrolled(true);
@@ -36,32 +38,36 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         {/* Logo ve Marka */}
         <a href="#" className="flex items-center gap-3 group focus:outline-none">
-          <div className="relative flex items-center justify-center">
-            <svg
-              viewBox="0 0 100 100"
-              className="h-8 w-8 text-zinc-100 transition-transform duration-500 group-hover:rotate-12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {/* KUZGUN Binary Emblem (Raven Head made of 1 and 0) */}
-              {/* Head circular loop (representing 0) */}
-              <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="2" strokeDasharray="160 40 10 30" />
-              
-              {/* Beak & Neck (representing 1) */}
-              <path d="M50 18 L50 82 M50 50 L24 68" stroke="currentColor" strokeWidth="2.5" />
-              
-              {/* Eye (glowing node) */}
-              <circle cx="50" cy="50" r="4" fill="currentColor" />
-              
-              {/* Binary bits around the head */}
-              <text x="20" y="38" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">1</text>
-              <text x="76" y="38" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">0</text>
-              <text x="24" y="70" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">0</text>
-              <text x="72" y="70" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">1</text>
-            </svg>
+          <div className="relative flex items-center justify-center w-8 h-8">
+            {mounted ? (
+              <svg
+                viewBox="0 0 100 100"
+                className="h-8 w-8 text-zinc-100 transition-transform duration-500 group-hover:rotate-12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* KUZGUN Binary Emblem (Raven Head made of 1 and 0) */}
+                {/* Head circular loop (representing 0) */}
+                <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="2" strokeDasharray="160 40 10 30" />
+                
+                {/* Beak & Neck (representing 1) */}
+                <path d="M50 18 L50 82 M50 50 L24 68" stroke="currentColor" strokeWidth="2.5" />
+                
+                {/* Eye (glowing node) */}
+                <circle cx="50" cy="50" r="4" fill="currentColor" />
+                
+                {/* Binary bits around the head */}
+                <text x="20" y="38" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">1</text>
+                <text x="76" y="38" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">0</text>
+                <text x="24" y="70" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">0</text>
+                <text x="72" y="70" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">1</text>
+              </svg>
+            ) : (
+              <div className="w-8 h-8" />
+            )}
           </div>
           <span className="text-sm font-semibold tracking-widest text-zinc-200 uppercase font-mono transition-colors duration-300 group-hover:text-white">
             KUZGUN
