@@ -290,70 +290,27 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
               </div>
             )}
 
-            {/* Huzur Vakti Pro: 3D Eğimli Premium Altın Telefon Mockup */}
+            {/* Huzur Vakti Pro: 3D Eğimli Gerçek Ekran Görüntülü Telefon Mockup */}
             {project.id === "huzur-vakti" && (
               <div
-                className="w-[190px] h-[360px] bg-[#09090a] rounded-[34px] border-[4.5px] border-zinc-800/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_40px_rgba(245,158,11,0.06)] relative p-3 flex flex-col justify-between overflow-hidden transition-all duration-750 group-hover:shadow-[0_30px_70px_-10px_rgba(0,0,0,0.95),0_0_50px_rgba(245,158,11,0.12)] group-hover:scale-[1.03]"
+                className="w-[190px] h-[360px] bg-zinc-950 rounded-[34px] border-[4.5px] border-zinc-800/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_40px_rgba(245,158,11,0.06)] relative p-1.5 flex flex-col overflow-hidden transition-all duration-750 group-hover:shadow-[0_30px_70px_-10px_rgba(0,0,0,0.95),0_0_50px_rgba(245,158,11,0.12)] group-hover:scale-[1.03]"
                 style={{
                   transform: "perspective(1000px) rotateX(10deg) rotateY(14deg) rotateZ(-3deg)",
                   transformStyle: "preserve-3d",
                 }}
               >
                 {/* Hoparlör & Kamera Çentiği */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-3.5 bg-zinc-800/90 rounded-b-xl flex items-center justify-center z-20">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-3.5 bg-zinc-800/90 rounded-b-xl flex items-center justify-center z-30">
                   <div className="w-6 h-0.5 bg-zinc-900 rounded-full"></div>
                 </div>
-                
-                {/* Uygulama İçeriği */}
-                <div className="flex-1 flex flex-col justify-between pt-5 pb-1 px-0.5">
-                  <div className="flex justify-between items-center text-[6.5px] font-mono text-zinc-500">
-                    <span>09:41</span>
-                    <span className="text-amber-500 font-bold tracking-widest">HUZUR VAKTİ</span>
-                  </div>
-                  
-                  {/* Hilal ve Sayaç Kartı */}
-                  <div className="my-auto flex flex-col gap-3">
-                    <div className="flex justify-center text-amber-500 text-[9px] animate-pulse">
-                      🌙
-                    </div>
-                    
-                    <div className="bg-zinc-900/60 border border-amber-500/10 rounded-xl p-2.5 flex flex-col items-center gap-1.5 shadow-lg shadow-black/40">
-                      <span className="text-[5.5px] font-mono text-amber-500/70 uppercase tracking-widest">İftara Kalan Süre</span>
-                      <span className="text-xs md:text-sm font-bold font-mono text-amber-400 tracking-wider">04:18:22</span>
-                      <div className="w-full h-[2px] bg-zinc-800 rounded-full overflow-hidden">
-                        <div className="h-full w-[70%] bg-gradient-to-r from-amber-600 to-amber-400"></div>
-                      </div>
-                    </div>
-                    
-                    {/* Namaz Vakitleri */}
-                    <div className="flex flex-col gap-1 text-[6px] font-mono">
-                      <div className="flex justify-between px-1 py-0.5 text-zinc-500">
-                        <span>İmsak</span>
-                        <span>03:42</span>
-                      </div>
-                      <div className="flex justify-between px-1 py-0.5 text-zinc-500">
-                        <span>Öğle</span>
-                        <span>13:12</span>
-                      </div>
-                      {/* Aktif Vakit (Akşam) */}
-                      <div className="flex justify-between px-1.5 py-1 bg-amber-500/10 border border-amber-500/15 rounded-md text-amber-400 font-bold shadow-inner">
-                        <span>Akşam (İftar)</span>
-                        <span>20:38</span>
-                      </div>
-                      <div className="flex justify-between px-1 py-0.5 text-zinc-500">
-                        <span>Yatsı</span>
-                        <span>22:15</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Gezinti Menüsü */}
-                  <div className="flex justify-around items-center border-t border-zinc-900/60 pt-2 text-[5.5px] font-mono text-zinc-600">
-                    <span className="text-amber-500">Vakitler</span>
-                    <span>Pusula</span>
-                    <span>Kuran</span>
-                    <span>Dualar</span>
-                  </div>
+                {/* Ekran */}
+                <div className="w-full h-full rounded-[28px] overflow-hidden bg-zinc-950 relative z-10">
+                  <img
+                    src="/huzur-vakti.png"
+                    alt="Huzur Vakti Pro Ekran Görüntüsü"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-zinc-950/40 via-transparent to-white/5 pointer-events-none"></div>
                 </div>
               </div>
             )}
