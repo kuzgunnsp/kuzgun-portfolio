@@ -35,7 +35,7 @@ export default function About() {
           <div className="flex items-center gap-2">
             <span className="h-[1px] w-8 bg-zinc-800"></span>
             <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
-              [ 04 // HAKKIMDA & FELSEFE ]
+              [ 05 // HAKKIMDA & FELSEFE ]
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
