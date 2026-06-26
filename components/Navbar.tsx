@@ -42,28 +42,25 @@ export default function Navbar() {
               className="h-8 w-8 text-zinc-100 transition-transform duration-500 group-hover:rotate-12"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              {/* Geometrik Kuzgun Logosu */}
-              {/* Baş & Gaga */}
-              <polygon points="50,15 44,24 50,32 56,24" fill="currentColor" fillOpacity="0.12" />
-              {/* Sol Kanat */}
-              <polygon points="40,28 22,12 8,55 32,48" fill="currentColor" fillOpacity="0.05" />
-              {/* Sağ Kanat */}
-              <polygon points="60,28 78,12 92,55 68,48" fill="currentColor" fillOpacity="0.05" />
-              {/* Gövde */}
-              <polygon points="50,32 32,48 50,68 68,48" fill="currentColor" fillOpacity="0.08" />
-              {/* Kuyruk */}
-              <polygon points="50,68 38,74 50,92 62,74" fill="currentColor" fillOpacity="0.1" />
-
-              {/* Kontur Çizgileri */}
-              <path d="M50 15 L44 24 L50 32 L56 24 Z" />
-              <path d="M40 28 L22 12 L8 55 L32 48 Z" />
-              <path d="M60 28 L78 12 L92 55 L68 48 Z" />
-              <path d="M50 68 L38 74 L50 92 L62 74 Z" />
-              <path d="M50 32 L50 68" />
+              {/* KUZGUN Binary Emblem (Raven Head made of 1 and 0) */}
+              {/* Head circular loop (representing 0) */}
+              <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="2" strokeDasharray="160 40 10 30" />
+              
+              {/* Beak & Neck (representing 1) */}
+              <path d="M50 18 L50 82 M50 50 L24 68" stroke="currentColor" strokeWidth="2.5" />
+              
+              {/* Eye (glowing node) */}
+              <circle cx="50" cy="50" r="4" fill="currentColor" />
+              
+              {/* Binary bits around the head */}
+              <text x="20" y="38" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">1</text>
+              <text x="76" y="38" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">0</text>
+              <text x="24" y="70" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">0</text>
+              <text x="72" y="70" className="text-[10px] font-mono fill-zinc-500 font-bold" stroke="none">1</text>
             </svg>
           </div>
           <span className="text-sm font-semibold tracking-widest text-zinc-200 uppercase font-mono transition-colors duration-300 group-hover:text-white">

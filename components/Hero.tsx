@@ -113,7 +113,7 @@ export default function Hero() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                {/* 3D Katman Derinliği Oluşturmak İçin Faset Çokgenleri (Polygons) */}
+                {/* 3D Katman Derinliği Oluşturmak İçin Faset Çokgenleri */}
                 
                 {/* Baş & Gaga Faseti (Açık İndigo Işıklı) */}
                 <polygon points="50,15 44,24 50,32 56,24" fill="currentColor" fillOpacity="0.15" className="text-indigo-400" />
@@ -161,7 +161,6 @@ export default function Hero() {
                 <line x1="74" y1="58" x2="57" y2="62" stroke="currentColor" strokeWidth="0.6" />
                 
                 {/* Omurga ve Kuyruk Çizgileri */}
-                <line x1="50" y1="36" x2="50" y2="68" stroke="currentColor" strokeWidth="1" />
                 <line x1="38" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
                 <line x1="62" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
                 
@@ -176,6 +175,37 @@ export default function Hero() {
                 <line x1="44" y1="24" x2="22" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
                 <line x1="56" y1="24" x2="78" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
 
+                {/* 1 ve 0 Kodlama Matrisi (Omurga / Spine ve Göğüs Kafesi olarak) */}
+                <g stroke="none" className="font-mono text-[5.5px] fill-zinc-400 font-bold" textAnchor="middle">
+                  <text x="50" y="38" className="fill-indigo-400/80 animate-pulse">1</text>
+                  <text x="50" y="44">0</text>
+                  <text x="50" y="50">1</text>
+                  <text x="50" y="56">1</text>
+                  <text x="50" y="62">0</text>
+                  <text x="50" y="68" className="fill-emerald-400/80 animate-pulse">1</text>
+                </g>
+                
+                {/* Kanatlardan süzülen binary veri akışları */}
+                <g stroke="none" className="font-mono text-[3.5px] fill-zinc-600 font-semibold" textAnchor="middle" opacity="0.6">
+                  {/* Sol Kanat Akışı */}
+                  <text x="24" y="24">0</text>
+                  <text x="20" y="32">1</text>
+                  <text x="16" y="40">0</text>
+                  <text x="12" y="48">1</text>
+                  
+                  {/* Sağ Kanat Akışı */}
+                  <text x="76" y="24">1</text>
+                  <text x="80" y="32">0</text>
+                  <text x="84" y="40">1</text>
+                  <text x="88" y="48">0</text>
+                </g>
+
+                {/* Göğüs kafesi üzerinde KUZGUN kelimesinin sıkıştırılmış / gömülmüş hali */}
+                <path d="M34 50 L31 50 L31 56 L34 56 M66 50 L69 50 L69 56 L66 56" stroke="currentColor" strokeWidth="0.4" opacity="0.6" />
+                <g stroke="none" className="font-mono text-[4.5px] fill-zinc-100 font-extrabold tracking-[0.2em]" textAnchor="middle">
+                  <text x="50" y="54.5" className="animate-pulse">KUZGUN</text>
+                </g>
+
                 {/* Bağlantı Düğümleri (Küçük Yıldız Noktaları) */}
                 <circle cx="50" cy="32" r="1.2" fill="#f59e0b" className="animate-ping" />
                 <circle cx="50" cy="32" r="1.2" fill="#f59e0b" />
@@ -184,7 +214,6 @@ export default function Hero() {
                 <circle cx="78" cy="12" r="1.2" fill="currentColor" />
                 <circle cx="8" cy="55" r="1" fill="currentColor" />
                 <circle cx="92" cy="55" r="1" fill="currentColor" />
-                <circle cx="50" cy="48" r="1" fill="currentColor" />
                 <circle cx="38" cy="74" r="0.8" fill="currentColor" />
                 <circle cx="62" cy="74" r="0.8" fill="currentColor" />
                 <circle cx="50" cy="92" r="1.2" fill="#10b981" />
