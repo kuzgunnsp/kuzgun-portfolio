@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // Yetenek verileri ve kategorileri
 const skillCategories = [
@@ -58,6 +58,8 @@ const skillCategories = [
 function SkillCard({ category }: { category: typeof skillCategories[0] }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -67,10 +69,38 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
     setMousePos({ x, y });
   };
 
+  useEffect(() => {
+    if (!isHovered) return;
+
+    const lines = [
+      `> Initializing terminal check...`,
+      `> Connecting library: ${category.title.toLowerCase().replace(" ", "_")}...`,
+      ...category.skills.slice(0, 3).map((s) => `> Verified: ${s}... [OK]`),
+      `> ALL SYSTEMS GO - 100% READY`,
+    ];
+
+    let currentLine = 0;
+    const interval = setInterval(() => {
+      if (currentLine < lines.length) {
+        setLogs((prev) => [...prev, lines[currentLine]]);
+        currentLine++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 120);
+
+    return () => clearInterval(interval);
+  }, [isHovered, category]);
+
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setLogs([]);
+      }}
       style={{
         "--mouse-x": `${mousePos.x}px`,
         "--mouse-y": `${mousePos.y}px`,
@@ -110,16 +140,43 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
           {category.description}
         </p>
 
-        {/* Yetenek Etiketleri */}
-        <div className="flex flex-wrap gap-2 mt-2">
-          {category.skills.map((skill) => (
-            <span
-              key={skill}
-              className="px-3 py-1.5 rounded-full bg-zinc-900/25 border border-zinc-900/80 hover:border-zinc-800 text-[10px] font-mono text-zinc-300 hover:text-white transition-all duration-300"
-            >
-              {skill}
-            </span>
-          ))}
+        {/* Yetenek Etiketleri VEYA Terminal Konsolu */}
+        <div className="relative h-28 mt-2 overflow-hidden">
+          {/* Standart Yetenek Etiketleri */}
+          <div
+            className={`flex flex-wrap gap-2 transition-all duration-300 ${
+              isHovered ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100"
+            }`}
+          >
+            {category.skills.map((skill) => (
+              <span
+                key={skill}
+                className="px-3 py-1.5 rounded-full bg-zinc-900/25 border border-zinc-900/80 hover:border-zinc-800 text-[10px] font-mono text-zinc-300 hover:text-white transition-all duration-300"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+
+          {/* Siber Derleme Terminali */}
+          <div
+            className={`absolute inset-0 bg-black/40 rounded-xl border border-zinc-900 p-4 font-mono text-[9px] text-emerald-400/80 flex flex-col gap-1 overflow-y-auto scrollbar-none transition-all duration-300 ${
+              isHovered ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-2 pointer-events-none"
+            }`}
+          >
+            {logs.map((log, i) => (
+              <div key={i} className="leading-tight select-none">
+                {log}
+              </div>
+            ))}
+            {/* Blinking prompt line */}
+            {logs.length < 6 && (
+              <div className="flex items-center gap-1">
+                <span className="text-zinc-600">&gt;</span>
+                <span className="w-1 h-2.5 bg-emerald-400/80 animate-pulse" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

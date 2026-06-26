@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // Proje verileri ve vaka analizi içerikleri
 const projectsData = [
@@ -88,6 +88,59 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [tiltStyle, setTiltStyle] = useState<React.CSSProperties>({});
   const [activeTab, setActiveTab] = useState<"overview" | "problem" | "solution">("overview");
+  const [isHovered, setIsHovered] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!isHovered) return;
+
+    let lines: string[] = [];
+    if (project.id === "lystra") {
+      lines = [
+        "[COMPILING TAILWIND CSS...]",
+        "> tailwindcss -i src/input.css -o dist/output.css --minify",
+        "> size: 99KB [OK]",
+        "> wp-theme-check: 0 errors",
+        "BUILD SUCCESSFUL",
+      ];
+    } else if (project.id === "huzur-vakti") {
+      lines = [
+        "[LAUNCHING FLUTTER BUILD...]",
+        "> flutter build apk --release --split-per-abi",
+        "> built release/app-release.apk (18.4MB) [OK]",
+        "> target: android-arm64",
+        "BUILD SUCCESSFUL",
+      ];
+    } else if (project.id === "merkezi-nokta") {
+      lines = [
+        "[RUNNING BLoC SUITE...]",
+        "> flutter test test/news_bloc_test.dart",
+        "> verified Hive local caching [OK]",
+        "> 14/14 unit tests passed",
+        "TEST RUN SUCCESSFUL",
+      ];
+    } else if (project.id === "lingo") {
+      lines = [
+        "[COMPILING SHADERS & AUDIO...]",
+        "> compiling WebGL assets",
+        "> FMOD bank loaded [OK]",
+        "> compiling 12 shaders [OK]",
+        "UNITY BUILD SUCCESSFUL",
+      ];
+    }
+
+    let current = 0;
+    const interval = setInterval(() => {
+      if (current < lines.length) {
+        setLogs((prev) => [...prev, lines[current]]);
+        current++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 150);
+
+    return () => clearInterval(interval);
+  }, [isHovered, project.id]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -123,7 +176,12 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        handleMouseLeave();
+        setIsHovered(false);
+        setLogs([]);
+      }}
       style={{
         ...tiltStyle,
         "--mouse-x": `${mousePos.x}px`,
@@ -384,6 +442,29 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
                 </div>
               </div>
             )}
+
+            {/* Siber Derleme Çıktısı Katmanı */}
+            <div
+              className={`absolute inset-x-4 bottom-4 z-25 bg-zinc-950/95 border border-zinc-900 rounded-xl p-3.5 font-mono text-[8px] text-emerald-400/85 flex flex-col gap-1 shadow-2xl transition-all duration-300 ${
+                isHovered ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4 pointer-events-none"
+              }`}
+            >
+              <div className="flex items-center justify-between border-b border-zinc-900/60 pb-1.5 mb-1.5 text-[7px] text-zinc-500 font-bold">
+                <span>BUILDER_SHELL // {project.id.toUpperCase()}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80 animate-pulse" />
+              </div>
+              {logs.map((log, i) => (
+                <div key={i} className="leading-tight select-none">
+                  {log}
+                </div>
+              ))}
+              {logs.length < 5 && (
+                <div className="flex items-center gap-0.5">
+                  <span className="text-zinc-600">&gt;</span>
+                  <span className="w-0.5 h-2 bg-emerald-400/80 animate-pulse" />
+                </div>
+              )}
+            </div>
 
           </div>
         </div>
