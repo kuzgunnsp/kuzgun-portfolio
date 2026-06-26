@@ -9,7 +9,10 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const frame = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -110,119 +113,250 @@ export default function Hero() {
               
               {mounted ? (
                 <svg
-                  viewBox="0 0 100 100"
-                  className="w-full h-full text-zinc-100 drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]"
+                  viewBox="0 0 200 200"
+                  className="w-full h-full text-zinc-100 drop-shadow-[0_20px_50px_rgba(0,0,0,0.95)]"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  {/* 3D Katman Derinliği Oluşturmak İçin Faset Çokgenleri */}
-                  
-                  {/* Baş & Gaga Faseti (Açık İndigo Işıklı) */}
-                  <polygon points="50,15 44,24 50,32 56,24" fill="currentColor" fillOpacity="0.15" className="text-indigo-400" />
-                  <polygon points="44,24 50,32 50,36 42,30" fill="currentColor" fillOpacity="0.08" />
-                  <polygon points="56,24 50,32 50,36 58,30" fill="currentColor" fillOpacity="0.08" />
-                  
-                  {/* Göğüs/Gövde Faseti */}
-                  <polygon points="50,36 42,30 50,48 58,30" fill="currentColor" fillOpacity="0.08" />
-                  <polygon points="50,48 43,62 50,68 57,62" fill="currentColor" fillOpacity="0.05" />
-                  
-                  {/* Sol Kanat Fasetleri */}
-                  <polygon points="40,28 22,12 32,48" fill="currentColor" fillOpacity="0.08" />
-                  <polygon points="22,12 8,55 32,48" fill="currentColor" fillOpacity="0.04" />
-                  <polygon points="8,55 15,60 32,48" fill="currentColor" fillOpacity="0.03" />
-                  <polygon points="15,60 26,58 32,48" fill="currentColor" fillOpacity="0.02" />
-                  
-                  {/* Sağ Kanat Fasetleri */}
-                  <polygon points="60,28 78,12 68,48" fill="currentColor" fillOpacity="0.08" />
-                  <polygon points="78,12 92,55 68,48" fill="currentColor" fillOpacity="0.04" />
-                  <polygon points="92,55 85,60 68,48" fill="currentColor" fillOpacity="0.03" />
-                  <polygon points="85,60 74,58 68,48" fill="currentColor" fillOpacity="0.02" />
-                  
-                  {/* Diamond Kuyruk Fasetleri */}
-                  <polygon points="43,62 50,68 38,74 50,92" fill="currentColor" fillOpacity="0.06" />
-                  <polygon points="57,62 50,68 62,74 50,92" fill="currentColor" fillOpacity="0.06" />
+                  <defs>
+                    {/* Gövde ve kafa için yanardöner koyu mor/indigo gradyan */}
+                    <linearGradient id="raven-body-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#080711" />
+                      <stop offset="30%" stopColor="#121026" />
+                      <stop offset="70%" stopColor="#1c1a3a" />
+                      <stop offset="100%" stopColor="#040308" />
+                    </linearGradient>
 
-                  {/* Kafes Görünümü Veren Ekstrüzyon Geometrik Bağlantı Çizgileri */}
-                  {/* Ana Çizgiler */}
-                  <line x1="50" y1="15" x2="50" y2="32" stroke="currentColor" strokeWidth="1.2" />
-                  <line x1="44" y1="24" x2="50" y2="32" stroke="currentColor" strokeWidth="0.8" />
-                  <line x1="56" y1="24" x2="50" y2="32" stroke="currentColor" strokeWidth="0.8" />
-                  
-                  {/* Sol Kanat Çizgileri */}
-                  <line x1="40" y1="28" x2="22" y2="12" stroke="currentColor" strokeWidth="1" />
-                  <line x1="22" y1="12" x2="8" y2="55" stroke="currentColor" strokeWidth="1" />
-                  <line x1="8" y1="55" x2="15" y2="60" stroke="currentColor" strokeWidth="0.6" />
-                  <line x1="15" y1="60" x2="26" y2="58" stroke="currentColor" strokeWidth="0.6" />
-                  <line x1="26" y1="58" x2="43" y2="62" stroke="currentColor" strokeWidth="0.6" />
-                  
-                  {/* Sağ Kanat Çizgileri */}
-                  <line x1="60" y1="28" x2="78" y2="12" stroke="currentColor" strokeWidth="1" />
-                  <line x1="78" y1="12" x2="92" y2="55" stroke="currentColor" strokeWidth="1" />
-                  <line x1="92" y1="55" x2="85" y2="60" stroke="currentColor" strokeWidth="0.6" />
-                  <line x1="85" y1="60" x2="74" y2="58" stroke="currentColor" strokeWidth="0.6" />
-                  <line x1="74" y1="58" x2="57" y2="62" stroke="currentColor" strokeWidth="0.6" />
-                  
-                  {/* Omurga ve Kuyruk Çizgileri */}
-                  <line x1="38" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
-                  <line x1="62" y1="74" x2="50" y2="92" stroke="currentColor" strokeWidth="1" />
-                  
-                  {/* İkincil İnce Bağlantı Çizgileri */}
-                  <line x1="22" y1="12" x2="50" y2="36" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                  <line x1="78" y1="12" x2="50" y2="36" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                  <line x1="8" y1="55" x2="50" y2="48" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                  <line x1="92" y1="55" x2="50" y2="48" stroke="currentColor" strokeWidth="0.3" opacity="0.3" />
-                  <line x1="32" y1="48" x2="43" y2="62" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
-                  <line x1="68" y1="48" x2="57" y2="62" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
-                  
-                  <line x1="44" y1="24" x2="22" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
-                  <line x1="56" y1="24" x2="78" y2="12" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
+                    {/* Sol kanat için dışa doğru yayılan metalik gradyan */}
+                    <linearGradient id="raven-wing-left-grad" x1="100%" y1="50%" x2="0%" y2="50%">
+                      <stop offset="0%" stopColor="#0f0e22" />
+                      <stop offset="50%" stopColor="#25224e" />
+                      <stop offset="85%" stopColor="#111024" />
+                      <stop offset="100%" stopColor="#06050b" />
+                    </linearGradient>
 
-                  {/* 1 ve 0 Kodlama Matrisi (Omurga / Spine ve Göğüs Kafesi olarak) */}
-                  <g stroke="none" className="font-mono text-[5.5px] fill-zinc-400 font-bold" textAnchor="middle">
-                    <text x="50" y="38" className="fill-indigo-400/80 animate-pulse">1</text>
-                    <text x="50" y="44">0</text>
-                    <text x="50" y="50">1</text>
-                    <text x="50" y="56">1</text>
-                    <text x="50" y="62">0</text>
-                    <text x="50" y="68" className="fill-emerald-400/80 animate-pulse">1</text>
+                    {/* Sağ kanat için dışa doğru yayılan metalik gradyan */}
+                    <linearGradient id="raven-wing-right-grad" x1="0%" y1="50%" x2="100%" y2="50%">
+                      <stop offset="0%" stopColor="#0f0e22" />
+                      <stop offset="50%" stopColor="#25224e" />
+                      <stop offset="85%" stopColor="#111024" />
+                      <stop offset="100%" stopColor="#06050b" />
+                    </linearGradient>
+
+                    {/* Tüy parıltıları için yarı saydam ışık gradyanı */}
+                    <linearGradient id="feather-highlight-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#818cf8" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#312e81" stopOpacity="0.0" />
+                    </linearGradient>
+
+                    {/* Amber göz ışıması için radial gradyan */}
+                    <radialGradient id="eye-glow-radial" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#fbbf24" stopOpacity="1" />
+                      <stop offset="40%" stopColor="#d97706" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
+                    </radialGradient>
+
+                    {/* Amber göz filtresi */}
+                    <filter id="eye-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="1.2" result="blur" />
+                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                  </defs>
+
+                  {/* 3D Kanat Çırpma CSS Animasyonları */}
+                  <style>{`
+                    @keyframes organicFlapLeft {
+                      0%, 100% {
+                        transform: rotateZ(18deg) rotateY(-12deg) rotateX(2deg);
+                      }
+                      35% {
+                        /* Güçlü aşağı vuruş: kanat aşağı iner ve öne doğru bükülür */
+                        transform: rotateZ(-20deg) rotateY(25deg) rotateX(-8deg);
+                      }
+                      50% {
+                        /* En alt nokta: hafifçe düzleşir */
+                        transform: rotateZ(-22deg) rotateY(12deg) rotateX(-2deg);
+                      }
+                      75% {
+                        /* Yukarı vuruş: kanat geriye doğru bükülür ve yukarı kalkar */
+                        transform: rotateZ(8deg) rotateY(-28deg) rotateX(8deg);
+                      }
+                    }
+                    @keyframes organicFlapRight {
+                      0%, 100% {
+                        transform: rotateZ(-18deg) rotateY(12deg) rotateX(2deg);
+                      }
+                      35% {
+                        /* Güçlü aşağı vuruş: kanat aşağı iner ve öne doğru bükülür */
+                        transform: rotateZ(20deg) rotateY(-25deg) rotateX(-8deg);
+                      }
+                      50% {
+                        /* En alt nokta: hafifçe düzleşir */
+                        transform: rotateZ(22deg) rotateY(-12deg) rotateX(-2deg);
+                      }
+                      75% {
+                        /* Yukarı vuruş: kanat geriye doğru bükülür ve yukarı kalkar */
+                        transform: rotateZ(-8deg) rotateY(28deg) rotateX(8deg);
+                      }
+                    }
+                    .wing-left-organic {
+                      transform-origin: 88px 62px;
+                      animation: organicFlapLeft 2.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+                      transform-style: preserve-3d;
+                    }
+                    .wing-right-organic {
+                      transform-origin: 112px 62px;
+                      animation: organicFlapRight 2.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+                      transform-style: preserve-3d;
+                    }
+                  `}</style>
+
+                  {/* ================= GÖVDE, BAŞ VE KUYRUK GRUBU (STATİK) ================= */}
+                  <g style={{ transformStyle: "preserve-3d" }}>
+                    {/* Temel Kuyruk Fasetleri (Kama Kuyruk - Layered Tail) */}
+                    <g opacity="0.85">
+                      {/* Sol Kuyruk Teleği */}
+                      <path
+                        d="M90,118 C80,135 83,155 93,178 C96,170 99,145 90,118 Z"
+                        fill="url(#raven-body-grad)"
+                        stroke="#312e81"
+                        strokeWidth="0.5"
+                        strokeOpacity="0.4"
+                      />
+                      {/* Sağ Kuyruk Teleği */}
+                      <path
+                        d="M110,118 C120,135 117,155 107,178 C104,170 101,145 110,118 Z"
+                        fill="url(#raven-body-grad)"
+                        stroke="#312e81"
+                        strokeWidth="0.5"
+                        strokeOpacity="0.4"
+                      />
+                      {/* Orta Kama Kuyruk */}
+                      <path
+                        d="M92,118 C88,135 90,165 100,185 C110,165 112,135 108,118 Z"
+                        fill="url(#raven-body-grad)"
+                        stroke="#4f46e5"
+                        strokeWidth="0.6"
+                        strokeOpacity="0.5"
+                      />
+                      {/* Kuyruk İçi Tüy Detay Çizgileri */}
+                      <line x1="100" y1="120" x2="100" y2="182" stroke="#4f46e5" strokeWidth="0.6" strokeOpacity="0.3" />
+                      <line x1="95" y1="130" x2="98" y2="165" stroke="#312e81" strokeWidth="0.4" strokeOpacity="0.3" />
+                      <line x1="105" y1="130" x2="102" y2="165" stroke="#312e81" strokeWidth="0.4" strokeOpacity="0.3" />
+                    </g>
+
+                    {/* Ana Gövde Silüeti (Body, Neck, Head and Beak integrated) */}
+                    <path
+                      d="M100,10 L95,24 C92,24 91,33 93,38 C95,43 91,52 88,62 C85,72 84,102 90,118 C90,118 78,142 100,185 C122,142 110,118 110,118 C116,102 115,72 112,62 C109,52 105,43 107,38 C109,33 108,24 105,24 L100,10 Z"
+                      fill="url(#raven-body-grad)"
+                      stroke="#1e1b4b"
+                      strokeWidth="0.8"
+                    />
+
+                    {/* Güçlü Kuzgun Gagası ve Baş Üstü Işığı */}
+                    <path
+                      d="M100,10 L95,24 C98,25 102,25 105,24 Z"
+                      fill="url(#feather-highlight-grad)"
+                      stroke="#4f46e5"
+                      strokeWidth="0.4"
+                      strokeOpacity="0.6"
+                    />
+
+                    {/* Boğazdaki Sakalsı Tüyler (Throat Feathers / "Beard") */}
+                    <path
+                      d="M94,38 C96,43 96,49 100,54 C104,49 104,43 106,38 C102,40 98,40 94,38 Z"
+                      fill="url(#feather-highlight-grad)"
+                      stroke="#4f46e5"
+                      strokeWidth="0.5"
+                      strokeOpacity="0.5"
+                    />
+
+                    {/* Göğüs Tüy Katmanları (Pürüzsüz Işık Çizgileri) */}
+                    <path d="M90,70 C95,76 105,76 110,70" stroke="url(#feather-highlight-grad)" strokeWidth="0.8" fill="none" />
+                    <path d="M88,85 C94,92 106,92 112,85" stroke="url(#feather-highlight-grad)" strokeWidth="0.8" fill="none" />
+                    <path d="M91,100 C95,106 105,106 109,100" stroke="url(#feather-highlight-grad)" strokeWidth="0.6" fill="none" />
+
+                    {/* CANLI KUZGUN GÖZLERİ (Amber/Altın Parlayan Gözler) */}
+                    {/* Sol Göz ve Haresi */}
+                    <circle cx="96" cy="28" r="3" fill="url(#eye-glow-radial)" filter="url(#eye-glow-filter)" />
+                    <circle cx="96" cy="28" r="1.2" fill="#fbbf24" />
+                    <circle cx="95.5" cy="27.5" r="0.4" fill="#ffffff" /> {/* Göz parıltısı */}
+
+                    {/* Sağ Göz ve Haresi */}
+                    <circle cx="104" cy="28" r="3" fill="url(#eye-glow-radial)" filter="url(#eye-glow-filter)" />
+                    <circle cx="104" cy="28" r="1.2" fill="#fbbf24" />
+                    <circle cx="103.5" cy="27.5" r="0.4" fill="#ffffff" /> {/* Göz parıltısı */}
                   </g>
-                  
-                  {/* Kanatlardan süzülen binary veri akışları */}
-                  <g stroke="none" className="font-mono text-[3.5px] fill-zinc-600 font-semibold" textAnchor="middle" opacity="0.6">
-                    {/* Sol Kanat Akışı */}
-                    <text x="24" y="24">0</text>
-                    <text x="20" y="32">1</text>
-                    <text x="16" y="40">0</text>
-                    <text x="12" y="48">1</text>
-                    
-                    {/* Sağ Kanat Akışı */}
-                    <text x="76" y="24">1</text>
-                    <text x="80" y="32">0</text>
-                    <text x="84" y="40">1</text>
-                    <text x="88" y="48">0</text>
+
+                  {/* ================= SOL KANAT GRUBU (3D ORGANİK KANAT ÇIRPAN) ================= */}
+                  <g className="wing-left-organic">
+                    {/* Kanat Altı Gölgesi / Gövde Bağlantısı */}
+                    <path
+                      d="M88,62 C75,50 55,30 30,20 C25,24 28,28 32,32 C50,45 70,58 88,68 Z"
+                      fill="url(#raven-wing-left-grad)"
+                      stroke="#1e1b4b"
+                      strokeWidth="0.6"
+                    />
+
+                    {/* Birincil Uçuş Tüyleri (Primaries - Wingtips) */}
+                    <path d="M30,20 C18,21 10,23 4,26 C3,28 5,30 12,31 C20,31 28,28 32,25 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M31,23 C19,26 11,32 6,38 C5,40 7,42 15,41 C24,39 31,33 34,29 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M33,26 C21,32 14,41 9,50 C8,52 11,53 18,50 C27,46 33,39 36,34 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M35,30 C24,39 18,50 14,62 C13,64 16,65 23,60 C31,54 36,46 38,39 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M38,35 C28,46 23,59 20,72 C19,74 22,75 29,69 C36,62 40,52 41,44 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+
+                    {/* İkincil Tüyler (Secondaries - Inner wing) */}
+                    <path d="M41,40 C32,53 28,68 27,81 C26,83 29,84 36,76 C43,68 46,56 46,47 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M46,45 C38,58 35,74 35,87 C35,89 38,90 44,81 C50,71 52,58 51,51 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M52,50 C46,63 43,78 44,91 C44,93 47,93 53,83 C58,73 59,60 57,55 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M59,54 C54,66 52,79 54,92 C54,94 57,94 62,84 C66,74 66,63 64,58 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M66,57 C62,68 61,79 63,91 C63,93 66,93 70,83 C73,73 73,64 71,61 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M74,60 C71,69 70,78 72,88 C72,90 75,90 78,80 C81,71 81,65 79,62 Z" fill="url(#raven-wing-left-grad)" stroke="#312e81" strokeWidth="0.4" />
+
+                    {/* Omuz Bölgesindeki Küçük Örtü Tüyleri (Covert Highlights) */}
+                    <path
+                      d="M80,62 C68,54 53,40 38,32 C42,40 58,54 80,64 Z"
+                      fill="url(#feather-highlight-grad)"
+                      stroke="#4f46e5"
+                      strokeWidth="0.3"
+                      strokeOpacity="0.4"
+                    />
                   </g>
 
-                  {/* Göğüs kafesi üzerinde KUZGUN kelimesinin sıkıştırılmış / gömülmüş hali */}
-                  <path d="M34 50 L31 50 L31 56 L34 56 M66 50 L69 50 L69 56 L66 56" stroke="currentColor" strokeWidth="0.4" opacity="0.6" />
-                  <g stroke="none" className="font-mono text-[4.5px] fill-zinc-100 font-extrabold tracking-[0.2em]" textAnchor="middle">
-                    <text x="50" y="54.5" className="animate-pulse">KUZGUN</text>
-                  </g>
+                  {/* ================= SAĞ KANAT GRUBU (3D ORGANİK KANAT ÇIRPAN) ================= */}
+                  <g className="wing-right-organic">
+                    {/* Kanat Altı Gölgesi / Gövde Bağlantısı */}
+                    <path
+                      d="M112,62 C125,50 145,30 170,20 C175,24 172,28 168,32 C150,45 130,58 112,68 Z"
+                      fill="url(#raven-wing-right-grad)"
+                      stroke="#1e1b4b"
+                      strokeWidth="0.6"
+                    />
 
-                  {/* Bağlantı Düğümleri (Küçük Yıldız Noktaları) */}
-                  <circle cx="50" cy="32" r="1.2" fill="#f59e0b" className="animate-ping" />
-                  <circle cx="50" cy="32" r="1.2" fill="#f59e0b" />
-                  <circle cx="50" cy="15" r="1" fill="currentColor" />
-                  <circle cx="22" cy="12" r="1.2" fill="currentColor" />
-                  <circle cx="78" cy="12" r="1.2" fill="currentColor" />
-                  <circle cx="8" cy="55" r="1" fill="currentColor" />
-                  <circle cx="92" cy="55" r="1" fill="currentColor" />
-                  <circle cx="38" cy="74" r="0.8" fill="currentColor" />
-                  <circle cx="62" cy="74" r="0.8" fill="currentColor" />
-                  <circle cx="50" cy="92" r="1.2" fill="#10b981" />
-                  <circle cx="50" cy="92" r="1.2" fill="#10b981" className="animate-ping" />
+                    {/* Birincil Uçuş Tüyleri (Primaries - Wingtips) */}
+                    <path d="M170,20 C182,21 190,23 196,26 C197,28 195,30 188,31 C180,31 172,28 168,25 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M169,23 C181,26 189,32 194,38 C195,40 193,42 185,41 C176,39 169,33 166,29 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M167,26 C179,32 186,41 191,50 C192,52 189,53 182,50 C173,46 167,39 164,34 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M165,30 C176,39 182,50 186,62 C187,64 184,65 177,60 C169,54 164,46 162,39 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M162,35 C172,46 177,59 180,72 C181,74 178,75 171,69 C164,62 160,52 159,44 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+
+                    {/* İkincil Tüyler (Secondaries - Inner wing) */}
+                    <path d="M159,40 C168,53 172,68 173,81 C174,83 171,84 164,76 C157,68 154,56 154,47 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M154,45 C162,58 165,74 165,87 C165,89 162,90 156,81 C150,71 148,58 149,51 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M148,50 C154,63 157,78 156,91 C156,93 153,93 147,83 C142,73 141,60 143,55 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M141,54 C146,66 148,79 146,92 C146,94 143,94 138,84 C134,74 134,63 136,58 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M134,57 C138,68 139,79 137,91 C137,93 134,93 130,83 C127,73 127,64 129,61 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+                    <path d="M126,60 C129,69 130,78 128,88 C128,90 125,90 122,80 C119,71 119,65 121,62 Z" fill="url(#raven-wing-right-grad)" stroke="#312e81" strokeWidth="0.4" />
+
+                    {/* Omuz Bölgesindeki Küçük Örtü Tüyleri (Covert Highlights) */}
+                    <path
+                      d="M120,62 C132,54 147,40 162,32 C158,40 142,54 120,64 Z"
+                      fill="url(#feather-highlight-grad)"
+                      stroke="#4f46e5"
+                      strokeWidth="0.3"
+                      strokeOpacity="0.4"
+                    />
+                  </g>
                 </svg>
               ) : (
                 <div className="w-full h-full" />
