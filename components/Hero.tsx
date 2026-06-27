@@ -10,7 +10,7 @@ export default function Hero() {
 
   // Terminal Durum Yönetimi
   const [input, setInput] = useState("");
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<(string | { tr: string; en: string })[]>([]);
   const [isMatrix, setIsMatrix] = useState(false);
   const [isAutotyping, setIsAutotyping] = useState(false);
 
@@ -28,14 +28,23 @@ export default function Hero() {
     }, 150);
 
     const t2 = setTimeout(() => {
-      setHistory((prev) => [...prev, t("Connecting to secure databases... Bağlantı kuruldu.", "Connecting to secure databases... Connection established.")]);
+      setHistory((prev) => [
+        ...prev,
+        {
+          tr: "Connecting to secure databases... Bağlantı kuruldu.",
+          en: "Connecting to secure databases... Connection established.",
+        },
+      ]);
     }, 550);
 
     const t3 = setTimeout(() => {
       setHistory((prev) => [
         ...prev,
-        t("KUZGUN terminaline hoş geldiniz.", "Welcome to KUZGUN terminal."),
-        t("Komutları görmek için 'help' yazın veya aşağıdaki butonları kullanın.", "Type 'help' to see commands or use the buttons below.")
+        { tr: "KUZGUN terminaline hoş geldiniz.", en: "Welcome to KUZGUN terminal." },
+        {
+          tr: "Komutları görmek için 'help' yazın veya aşağıdaki butonları kullanın.",
+          en: "Type 'help' to see commands or use the buttons below.",
+        },
       ]);
     }, 950);
 
@@ -145,54 +154,54 @@ export default function Hero() {
 
     if (lowerCmd === "help") {
       newHistory.push(
-        t("Kullanılabilir komutlar:", "Available commands:"),
-        t("  about     - Geliştirici profilini görüntüle", "  about     - View developer profile"),
-        t("  projects  - Portfolyo projelerini listele", "  projects  - List portfolio projects"),
-        t("  skills    - Teknik yetenekleri incele", "  skills    - Explore technical skills"),
-        t("  contact   - İletişim kanallarını göster", "  contact   - Show contact channels"),
-        t("  matrix    - Matrix dijital yağmurunu aç/kapat", "  matrix    - Toggle Matrix digital rain"),
-        t("  lang      - Dil değiştir (lang tr / lang en)", "  lang      - Change language (lang tr / lang en)"),
-        t("  clear     - Ekranı temizle", "  clear     - Clear screen")
+        { tr: "Kullanılabilir komutlar:", en: "Available commands:" },
+        { tr: "  about     - Geliştirici profilini görüntüle", en: "  about     - View developer profile" },
+        { tr: "  projects  - Portfolyo projelerini listele", en: "  projects  - List portfolio projects" },
+        { tr: "  skills    - Teknik yetenekleri incele", en: "  skills    - Explore technical skills" },
+        { tr: "  contact   - İletişim kanallarını göster", en: "  contact   - Show contact channels" },
+        { tr: "  matrix    - Matrix dijital yağmurunu aç/kapat", en: "  matrix    - Toggle Matrix digital rain" },
+        { tr: "  lang      - Dil değiştir (lang tr / lang en)", en: "  lang      - Change language (lang tr / lang en)" },
+        { tr: "  clear     - Ekranı temizle", en: "  clear     - Clear screen" }
       );
     } else if (lowerCmd === "about") {
       newHistory.push(
-        t("Kuzgun (Mustafa Duman) - Yazılım Geliştirici", "Kuzgun (Mustafa Duman) - Software Developer"),
-        t("Mobil uygulama, web platformları ve interaktif sistemler üzerine odaklanmış,", "Focused on mobile apps, web platforms and interactive systems,"),
-        t("fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.", "a creative developer combining futuristic designs with high-performance code."),
-        t("Sistem Hakkımda bölümüne yönlendiriliyor...", "Redirecting to About section...")
+        { tr: "Kuzgun (Mustafa Duman) - Yazılım Geliştirici", en: "Kuzgun (Mustafa Duman) - Software Developer" },
+        { tr: "Mobil uygulama, web platformları ve interaktif sistemler üzerine odaklanmış,", en: "Focused on mobile apps, web platforms and interactive systems," },
+        { tr: "fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.", en: "a creative developer combining futuristic designs with high-performance code." },
+        { tr: "Sistem Hakkımda bölümüne yönlendiriliyor...", en: "Redirecting to About section..." }
       );
       setTimeout(() => {
         document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
     } else if (lowerCmd === "projects") {
       newHistory.push(
-        t("Tamamlanan Projeler Yükleniyor...", "Loading Completed Projects..."),
-        t("  - Lystra: Modern WooCommerce WordPress Teması", "  - Lystra: Modern WooCommerce WordPress Theme"),
-        t("  - Namaz Vakitleri: Premium Tasarımlı Mobil Uygulama", "  - Prayer Times: Premium Designed Mobile App"),
-        t("  - Kuzgun Portfolio v1.0: Next.js ve TailwindCSS v4 Portfolyo", "  - Kuzgun Portfolio v1.0: Next.js & TailwindCSS v4 Portfolio"),
-        t("Sistem Projeler bölümüne yönlendiriliyor...", "Redirecting to Projects section...")
+        { tr: "Tamamlanan Projeler Yükleniyor...", en: "Loading Completed Projects..." },
+        { tr: "  - Lystra: Modern WooCommerce WordPress Teması", en: "  - Lystra: Modern WooCommerce WordPress Theme" },
+        { tr: "  - Namaz Vakitleri: Premium Tasarımlı Mobil Uygulama", en: "  - Prayer Times: Premium Designed Mobile App" },
+        { tr: "  - Kuzgun Portfolio v1.0: Next.js ve TailwindCSS v4 Portfolyo", en: "  - Kuzgun Portfolio v1.0: Next.js & TailwindCSS v4 Portfolio" },
+        { tr: "Sistem Projeler bölümüne yönlendiriliyor...", en: "Redirecting to Projects section..." }
       );
       setTimeout(() => {
         document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
     } else if (lowerCmd === "skills") {
       newHistory.push(
-        t("Teknik Stack Yükleniyor...", "Loading Tech Stack..."),
+        { tr: "Teknik Stack Yükleniyor...", en: "Loading Tech Stack..." },
         "  - Core: React, Next.js, TypeScript, Node.js",
         "  - Mobile: React Native, Flutter, Swift, CoreData",
         "  - Game/3D: Unity, C#, WebGL, Three.js, Canvas2D",
-        t("Sistem Yetenekler bölümüne yönlendiriliyor...", "Redirecting to Skills section...")
+        { tr: "Sistem Yetenekler bölümüne yönlendiriliyor...", en: "Redirecting to Skills section..." }
       );
       setTimeout(() => {
         document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
     } else if (lowerCmd === "contact") {
       newHistory.push(
-        t("İletişim Kanalları Bağlanıyor...", "Connecting Communication Channels..."),
+        { tr: "İletişim Kanalları Bağlanıyor...", en: "Connecting Communication Channels..." },
         "  - E-posta: hello@kuzgun.dev",
         "  - LinkedIn: linkedin.com/in/mustafadumannn/",
         "  - Bionluk: bionluk.com/mustafadumannn",
-        t("Sistem İletişim bölümüne yönlendiriliyor...", "Redirecting to Contact section...")
+        { tr: "Sistem İletişim bölümüne yönlendiriliyor...", en: "Redirecting to Contact section..." }
       );
       setTimeout(() => {
         document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
@@ -201,11 +210,14 @@ export default function Hero() {
       setIsMatrix(!isMatrix);
       newHistory.push(
         !isMatrix 
-          ? t("Matrix Dijital Yağmuru aktif edildi. Çıkmak için tekrar 'matrix' yazın.", "Matrix Digital Rain activated. Type 'matrix' again to exit.")
-          : t("Matrix Dijital Yağmuru kapatıldı.", "Matrix Digital Rain deactivated.")
+          ? { tr: "Matrix Dijital Yağmuru aktif edildi. Çıkmak için tekrar 'matrix' yazın.", en: "Matrix Digital Rain activated. Type 'matrix' again to exit." }
+          : { tr: "Matrix Dijital Yağmuru kapatıldı.", en: "Matrix Digital Rain deactivated." }
       );
     } else {
-      newHistory.push(t(`Komut bulunamadı: '${cmd}'. Seçenekler için 'help' yazın.`, `Command not found: '${cmd}'. Type 'help' for options.`));
+      newHistory.push({
+        tr: `Komut bulunamadı: '${cmd}'. Seçenekler için 'help' yazın.`,
+        en: `Command not found: '${cmd}'. Type 'help' for options.`,
+      });
     }
 
     setHistory(newHistory);
@@ -362,22 +374,25 @@ export default function Hero() {
               {/* Terminal İçeriği */}
               <div className="relative z-10 w-full h-full flex flex-col justify-between">
                 <div ref={terminalScrollContainerRef} className="flex-1 overflow-y-auto max-h-[160px] sm:max-h-[220px] pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
-                  {history.map((line, idx) => (
-                    <div
-                      key={idx}
-                      className={`whitespace-pre-wrap ${
-                        line.startsWith("kuzgun@dev:")
-                          ? "text-zinc-100 font-semibold"
-                          : line.startsWith("  -")
-                          ? "text-amber-500/90"
-                          : line.startsWith("  about") || line.startsWith("  projects")
-                          ? "text-emerald-400"
-                          : "text-zinc-400"
-                      }`}
-                    >
-                      {line}
-                    </div>
-                  ))}
+                  {history.map((line, idx) => {
+                    const text = typeof line === "string" ? line : (language === "tr" ? line.tr : line.en);
+                    return (
+                      <div
+                        key={idx}
+                        className={`whitespace-pre-wrap ${
+                          text.startsWith("kuzgun@dev:")
+                            ? "text-zinc-100 font-semibold"
+                            : text.startsWith("  -")
+                            ? "text-amber-500/90"
+                            : text.startsWith("  about") || text.startsWith("  projects")
+                            ? "text-emerald-400"
+                            : "text-zinc-400"
+                        }`}
+                      >
+                        {text}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Giriş Satırı */}
