@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "./LanguageContext";
+import SnakeGame from "./SnakeGame";
 
 export default function Hero() {
   // 3D Tilt / Mouse Takip Durum Yönetimi
@@ -13,6 +14,7 @@ export default function Hero() {
   const [history, setHistory] = useState<(string | { tr: string; en: string })[]>([]);
   const [isMatrix, setIsMatrix] = useState(false);
   const [isAutotyping, setIsAutotyping] = useState(false);
+  const [isSnakeGame, setIsSnakeGame] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalScrollContainerRef = useRef<HTMLDivElement>(null);
@@ -152,6 +154,54 @@ export default function Hero() {
       return;
     }
 
+    if (lowerCmd === "snake") {
+      setIsSnakeGame(true);
+      setInput("");
+      return;
+    }
+
+    if (lowerCmd.startsWith("theme ")) {
+      const selectedTheme = lowerCmd.split(" ")[1];
+      if (["cyberpunk", "matrix", "vaporwave", "default", "obsidian"].includes(selectedTheme)) {
+        if (selectedTheme === "cyberpunk") {
+          document.documentElement.style.setProperty("--color-accent", "#ff007f");
+          document.documentElement.style.setProperty("--color-accent-rgb", "255, 0, 127");
+        } else if (selectedTheme === "matrix") {
+          document.documentElement.style.setProperty("--color-accent", "#10b981");
+          document.documentElement.style.setProperty("--color-accent-rgb", "16, 185, 129");
+          setIsMatrix(true);
+        } else if (selectedTheme === "vaporwave") {
+          document.documentElement.style.setProperty("--color-accent", "#8b5cf6");
+          document.documentElement.style.setProperty("--color-accent-rgb", "139, 92, 246");
+        } else {
+          document.documentElement.style.removeProperty("--color-accent");
+          document.documentElement.style.removeProperty("--color-accent-rgb");
+        }
+        newHistory.push({
+          tr: `Tema ${selectedTheme.toUpperCase()} olarak değiştirildi.`,
+          en: `Theme changed to ${selectedTheme.toUpperCase()}.`
+        });
+      } else {
+        newHistory.push({
+          tr: "Geçersiz tema. Kullanılabilir temalar: default, cyberpunk, matrix, vaporwave",
+          en: "Invalid theme. Available themes: default, cyberpunk, matrix, vaporwave"
+        });
+      }
+      setHistory(newHistory);
+      setInput("");
+      return;
+    }
+
+    if (lowerCmd === "sudo") {
+      newHistory.push({
+        tr: "Hata: Yetkisiz erişim. Sistem izinsiz giriş protokolü devrede... Şaka şaka, portfolyoda yönetici yetkiniz bulunmuyor :)",
+        en: "Error: Unauthorized access. System intrusion protocol active... Just kidding, you do not have root privileges in this portfolio :)"
+      });
+      setHistory(newHistory);
+      setInput("");
+      return;
+    }
+
     if (lowerCmd === "help") {
       newHistory.push(
         { tr: "Kullanılabilir komutlar:", en: "Available commands:" },
@@ -160,6 +210,9 @@ export default function Hero() {
         { tr: "  skills    - Teknik yetenekleri incele", en: "  skills    - Explore technical skills" },
         { tr: "  contact   - İletişim kanallarını göster", en: "  contact   - Show contact channels" },
         { tr: "  matrix    - Matrix dijital yağmurunu aç/kapat", en: "  matrix    - Toggle Matrix digital rain" },
+        { tr: "  snake     - Klasik yılan oyununu oyna", en: "  snake     - Play classic snake game" },
+        { tr: "  theme     - Temayı değiştir (theme default/cyberpunk/matrix/vaporwave)", en: "  theme     - Change theme (theme default/cyberpunk/matrix/vaporwave)" },
+        { tr: "  sudo      - Yönetici yetkilerini dene", en: "  sudo      - Try admin privileges" },
         { tr: "  lang      - Dil değiştir (lang tr / lang en)", en: "  lang      - Change language (lang tr / lang en)" },
         { tr: "  clear     - Ekranı temizle", en: "  clear     - Clear screen" }
       );
@@ -168,7 +221,7 @@ export default function Hero() {
         { tr: "Kuzgun (Mustafa Duman) - Yazılım Geliştirici", en: "Kuzgun (Mustafa Duman) - Software Developer" },
         { tr: "Mobil uygulama, web platformları ve interaktif sistemler üzerine odaklanmış,", en: "Focused on mobile apps, web platforms and interactive systems," },
         { tr: "fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.", en: "a creative developer combining futuristic designs with high-performance code." },
-        { tr: "Sistem Hakkımda bölümüne yönlendiriliyor...", en: "Redirecting to About section..." }
+        { tr: "Sistem Hakkımda bölümüne yönalleriliyor...", en: "Redirecting to About section..." }
       );
       setTimeout(() => {
         document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
@@ -360,10 +413,9 @@ export default function Hero() {
               <div className="w-12" />
             </div>
 
-            {/* Terminal Gövdesi */}
             <div className="relative flex-1 p-4 overflow-hidden font-mono text-xs sm:text-sm leading-relaxed text-zinc-300">
               {/* Matrix Canvas */}
-              {isMatrix && (
+              {isMatrix && !isSnakeGame && (
                 <canvas
                   ref={canvasRef}
                   className="absolute inset-0 z-0 pointer-events-none"
@@ -371,56 +423,73 @@ export default function Hero() {
                 />
               )}
 
-              {/* Terminal İçeriği */}
-              <div className="relative z-10 w-full h-full flex flex-col justify-between">
-                <div ref={terminalScrollContainerRef} className="flex-1 overflow-y-auto max-h-[160px] sm:max-h-[220px] pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
-                  {history.map((line, idx) => {
-                    const text = typeof line === "string" ? line : (language === "tr" ? line.tr : line.en);
-                    return (
-                      <div
-                        key={idx}
-                        className={`whitespace-pre-wrap ${
-                          text.startsWith("kuzgun@dev:")
-                            ? "text-zinc-100 font-semibold"
-                            : text.startsWith("  -")
-                            ? "text-amber-500/90"
-                            : text.startsWith("  about") || text.startsWith("  projects")
-                            ? "text-emerald-400"
-                            : "text-zinc-400"
-                        }`}
-                      >
-                        {text}
-                      </div>
-                    );
-                  })}
-                </div>
+              {isSnakeGame ? (
+                <SnakeGame
+                  language={language}
+                  onClose={(finalScore) => {
+                    setIsSnakeGame(false);
+                    setHistory((prev) => [
+                      ...prev,
+                      "kuzgun@dev:~$ snake",
+                      {
+                        tr: `Yılan oyunu sonlandırıldı. Skorunuz: ${finalScore}`,
+                        en: `Snake game terminated. Your score: ${finalScore}`
+                      }
+                    ]);
+                  }}
+                />
+              ) : (
+                /* Terminal İçeriği */
+                <div className="relative z-10 w-full h-full flex flex-col justify-between">
+                  <div ref={terminalScrollContainerRef} className="flex-1 overflow-y-auto max-h-[160px] sm:max-h-[220px] pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
+                    {history.map((line, idx) => {
+                      const text = typeof line === "string" ? line : (language === "tr" ? line.tr : line.en);
+                      return (
+                        <div
+                          key={idx}
+                          className={`whitespace-pre-wrap ${
+                            text.startsWith("kuzgun@dev:")
+                              ? "text-zinc-100 font-semibold"
+                              : text.startsWith("  -")
+                              ? "text-amber-500/90"
+                              : text.startsWith("  about") || text.startsWith("  projects")
+                              ? "text-emerald-400"
+                              : "text-zinc-400"
+                          }`}
+                        >
+                          {text}
+                        </div>
+                      );
+                    })}
+                  </div>
 
-                {/* Giriş Satırı */}
-                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-zinc-900/50 relative z-20">
-                  <span className="text-zinc-100 font-semibold shrink-0 select-none">kuzgun@dev:~$</span>
-                  <div className="flex-1 flex items-center relative">
-                    <span className="text-emerald-400 font-semibold">{input}</span>
-                    {/* Yanıp Sönen İmleç */}
-                    <span className="w-2 h-4 sm:h-5 bg-emerald-400 ml-1 animate-[pulse_1s_infinite] shrink-0" />
-                    
-                    {/* Gizli Input */}
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      value={input}
-                      onChange={(e) => !isAutotyping && setInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !isAutotyping) {
-                          handleCommand(input);
-                        }
-                      }}
-                      className="absolute inset-0 opacity-0 cursor-default focus:outline-none"
-                      disabled={isAutotyping}
-                      autoFocus
-                    />
+                  {/* Giriş Satırı */}
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-zinc-900/50 relative z-20">
+                    <span className="text-zinc-100 font-semibold shrink-0 select-none">kuzgun@dev:~$</span>
+                    <div className="flex-1 flex items-center relative">
+                      <span className="text-emerald-400 font-semibold">{input}</span>
+                      {/* Yanıp Sönen İmleç */}
+                      <span className="w-2 h-4 sm:h-5 bg-emerald-400 ml-1 animate-[pulse_1s_infinite] shrink-0" />
+                      
+                      {/* Gizli Input */}
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={input}
+                        onChange={(e) => !isAutotyping && setInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !isAutotyping) {
+                            handleCommand(input);
+                          }
+                        }}
+                        className="absolute inset-0 opacity-0 cursor-default focus:outline-none"
+                        disabled={isAutotyping}
+                        autoFocus
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Hızlı Erişim Barı */}
