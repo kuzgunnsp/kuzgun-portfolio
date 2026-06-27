@@ -3,6 +3,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "./LanguageContext";
 import SnakeGame from "./SnakeGame";
+import { useSound } from "./SoundContext";
+
+const siteLoadTime = typeof window !== "undefined" ? Date.now() : 0;
 
 export default function Hero() {
   // 3D Tilt / Mouse Takip Durum Yönetimi
@@ -21,6 +24,7 @@ export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { language, setLanguage, t } = useLanguage();
+  const { playClickSound, playSuccessSound, playErrorSound } = useSound();
 
   // Sayfa yüklendiğinde boot animasyonu
   useEffect(() => {
@@ -138,17 +142,18 @@ export default function Hero() {
     if (lowerCmd === "clear") {
       setHistory([]);
       setInput("");
+      playSuccessSound();
       return;
     }
 
     if (lowerCmd === "lang tr" || lowerCmd === "lang en") {
       const newLang = lowerCmd.split(" ")[1] as "tr" | "en";
       setLanguage(newLang);
-      newHistory.push(
-        newLang === "tr" 
-          ? "Dil Türkçe olarak ayarlandı." 
-          : "Language set to English."
-      );
+      newHistory.push({
+        tr: "Dil Türkçe olarak ayarlandı.",
+        en: "Language set to English."
+      });
+      playSuccessSound();
       setHistory(newHistory);
       setInput("");
       return;
@@ -157,6 +162,7 @@ export default function Hero() {
     if (lowerCmd === "snake") {
       setIsSnakeGame(true);
       setInput("");
+      playSuccessSound();
       return;
     }
 
@@ -181,11 +187,13 @@ export default function Hero() {
           tr: `Tema ${selectedTheme.toUpperCase()} olarak değiştirildi.`,
           en: `Theme changed to ${selectedTheme.toUpperCase()}.`
         });
+        playSuccessSound();
       } else {
         newHistory.push({
           tr: "Geçersiz tema. Kullanılabilir temalar: default, cyberpunk, matrix, vaporwave",
           en: "Invalid theme. Available themes: default, cyberpunk, matrix, vaporwave"
         });
+        playErrorSound();
       }
       setHistory(newHistory);
       setInput("");
@@ -197,6 +205,31 @@ export default function Hero() {
         tr: "Hata: Yetkisiz erişim. Sistem izinsiz giriş protokolü devrede... Şaka şaka, portfolyoda yönetici yetkiniz bulunmuyor :)",
         en: "Error: Unauthorized access. System intrusion protocol active... Just kidding, you do not have root privileges in this portfolio :)"
       });
+      playErrorSound();
+      setHistory(newHistory);
+      setInput("");
+      return;
+    }
+
+    if (lowerCmd === "neofetch" || lowerCmd === "system") {
+      const activeTheme = document.documentElement.style.getPropertyValue("--color-accent") ? "Custom" : "Obsidian (Default)";
+      const resolution = typeof window !== "undefined" ? `${window.screen.width}x${window.screen.height}` : "Unknown";
+      const userAgent = typeof navigator !== "undefined" ? (navigator.userAgent.includes("Chrome") ? "Chrome / WebKit" : navigator.userAgent.includes("Firefox") ? "Firefox" : "Safari / WebKit") : "Unknown";
+      const uptime = `${Math.floor((Date.now() - siteLoadTime) / 60000)}m ${Math.floor(((Date.now() - siteLoadTime) % 60000) / 1000)}s`;
+
+      newHistory.push(
+        "   /\\_/\\     kuzgun@dev",
+        "  ( o.o )    ----------",
+        `   > ^ <     OS: Kuzgun OS v1.0.0`,
+        `             Kernel: Next.js 16.2.9`,
+        `             Uptime: ${uptime}`,
+        `             Shell: bash / KUZGUN-CLI`,
+        `             Resolution: ${resolution}`,
+        `             Browser: ${userAgent}`,
+        `             Active Theme: ${activeTheme}`,
+        `             Language: ${language.toUpperCase()}`
+      );
+      playSuccessSound();
       setHistory(newHistory);
       setInput("");
       return;
@@ -213,9 +246,11 @@ export default function Hero() {
         { tr: "  snake     - Klasik yılan oyununu oyna", en: "  snake     - Play classic snake game" },
         { tr: "  theme     - Temayı değiştir (theme default/cyberpunk/matrix/vaporwave)", en: "  theme     - Change theme (theme default/cyberpunk/matrix/vaporwave)" },
         { tr: "  sudo      - Yönetici yetkilerini dene", en: "  sudo      - Try admin privileges" },
+        { tr: "  neofetch  - Sistem özelliklerini görüntüle", en: "  neofetch  - Display system specs" },
         { tr: "  lang      - Dil değiştir (lang tr / lang en)", en: "  lang      - Change language (lang tr / lang en)" },
         { tr: "  clear     - Ekranı temizle", en: "  clear     - Clear screen" }
       );
+      playSuccessSound();
     } else if (lowerCmd === "about") {
       newHistory.push(
         { tr: "Kuzgun (Mustafa Duman) - Yazılım Geliştirici", en: "Kuzgun (Mustafa Duman) - Software Developer" },
@@ -223,6 +258,7 @@ export default function Hero() {
         { tr: "fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.", en: "a creative developer combining futuristic designs with high-performance code." },
         { tr: "Sistem Hakkımda bölümüne yönalleriliyor...", en: "Redirecting to About section..." }
       );
+      playSuccessSound();
       setTimeout(() => {
         document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
@@ -234,6 +270,7 @@ export default function Hero() {
         { tr: "  - Kuzgun Portfolio v1.0: Next.js ve TailwindCSS v4 Portfolyo", en: "  - Kuzgun Portfolio v1.0: Next.js & TailwindCSS v4 Portfolio" },
         { tr: "Sistem Projeler bölümüne yönlendiriliyor...", en: "Redirecting to Projects section..." }
       );
+      playSuccessSound();
       setTimeout(() => {
         document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
@@ -245,6 +282,7 @@ export default function Hero() {
         "  - Game/3D: Unity, C#, WebGL, Three.js, Canvas2D",
         { tr: "Sistem Yetenekler bölümüne yönlendiriliyor...", en: "Redirecting to Skills section..." }
       );
+      playSuccessSound();
       setTimeout(() => {
         document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
@@ -256,6 +294,7 @@ export default function Hero() {
         "  - Bionluk: bionluk.com/mustafadumannn",
         { tr: "Sistem İletişim bölümüne yönlendiriliyor...", en: "Redirecting to Contact section..." }
       );
+      playSuccessSound();
       setTimeout(() => {
         document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
@@ -266,11 +305,13 @@ export default function Hero() {
           ? { tr: "Matrix Dijital Yağmuru aktif edildi. Çıkmak için tekrar 'matrix' yazın.", en: "Matrix Digital Rain activated. Type 'matrix' again to exit." }
           : { tr: "Matrix Dijital Yağmuru kapatıldı.", en: "Matrix Digital Rain deactivated." }
       );
+      playSuccessSound();
     } else {
       newHistory.push({
         tr: `Komut bulunamadı: '${cmd}'. Seçenekler için 'help' yazın.`,
         en: `Command not found: '${cmd}'. Type 'help' for options.`,
       });
+      playErrorSound();
     }
 
     setHistory(newHistory);
@@ -393,7 +434,7 @@ export default function Hero() {
         >
           {/* 3D Dönüşüm Kapsayıcısı */}
           <div
-            className="relative w-full max-w-[460px] aspect-[4/3] sm:aspect-[16/11] flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/80 backdrop-blur-md transition-transform duration-200 ease-out shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden select-none cursor-pointer"
+            className="relative w-full max-w-[460px] aspect-[4/3] sm:aspect-[16/11] flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/80 backdrop-blur-md transition-transform duration-200 ease-out shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden select-none cursor-pointer crt-screen"
             style={{
               transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
               transformStyle: "preserve-3d",
@@ -476,7 +517,12 @@ export default function Hero() {
                         ref={inputRef}
                         type="text"
                         value={input}
-                        onChange={(e) => !isAutotyping && setInput(e.target.value)}
+                        onChange={(e) => {
+                          if (!isAutotyping) {
+                            setInput(e.target.value);
+                            playClickSound();
+                          }
+                        }}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && !isAutotyping) {
                             handleCommand(input);

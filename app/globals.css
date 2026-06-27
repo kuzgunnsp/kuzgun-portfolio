@@ -117,3 +117,44 @@ body {
 .animate-pulse-slow-reverse {
   animation: pulseSlow 18s ease-in-out infinite reverse;
 }
+
+/* CRT Scanline & Screen Glitch Effects */
+.crt-screen {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-screen::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.18) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 20;
+  background-size: 100% 4px, 4px 100%;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Glitch Text Effect */
+.glitch-hover {
+  position: relative;
+  transition: text-shadow 0.2s ease;
+}
+
+.glitch-hover:hover {
+  animation: glitch-anim 0.3s infinite;
+  text-shadow: 2px -2px var(--color-accent, #10b981), -2px 2px var(--color-accent-glow, #10b981);
+}
+
+@keyframes glitch-anim {
+  0% {
+    text-shadow: 2px -2px var(--color-accent, #10b981), -2px 2px var(--color-accent-glow, #10b981);
+  }
+  50% {
+    text-shadow: -2px 2px var(--color-accent, #10b981), 2px -2px var(--color-accent-glow, #10b981);
+  }
+  100% {
+    text-shadow: 1px -1px var(--color-accent, #10b981), -1px 1px var(--color-accent-glow, #10b981);
+  }
+}

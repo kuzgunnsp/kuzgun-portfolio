@@ -7,6 +7,8 @@ import GlobalMatrixRain from "../components/GlobalMatrixRain";
 import CommandPalette from "../components/CommandPalette";
 import DebugWidget from "../components/DebugWidget";
 import { LanguageProvider } from "../components/LanguageContext";
+import { SoundProvider } from "../components/SoundContext";
+import CustomCursor from "../components/CustomCursor";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -147,10 +149,13 @@ export default function RootLayout({
           }}
         />
         <LanguageProvider>
-          <GlobalMatrixRain />
-          {children}
-          <CommandPalette />
-          <DebugWidget />
+          <SoundProvider>
+            <GlobalMatrixRain />
+            {children}
+            <CommandPalette />
+            <DebugWidget />
+            <CustomCursor />
+          </SoundProvider>
         </LanguageProvider>
         <SpeedInsights />
         <Analytics />
