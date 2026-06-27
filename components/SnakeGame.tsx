@@ -7,16 +7,16 @@ interface SnakeGameProps {
   language: "tr" | "en";
 }
 
-const COLS = 24;
-const ROWS = 12;
+const COLS = 20;
+const ROWS = 8;
 
 export default function SnakeGame({ onClose, language }: SnakeGameProps) {
   const [snake, setSnake] = useState<{ x: number; y: number }[]>([
-    { x: 10, y: 6 },
-    { x: 9, y: 6 },
-    { x: 8, y: 6 },
+    { x: 8, y: 4 },
+    { x: 7, y: 4 },
+    { x: 6, y: 4 },
   ]);
-  const [food, setFood] = useState<{ x: number; y: number }>({ x: 15, y: 6 });
+  const [food, setFood] = useState<{ x: number; y: number }>({ x: 12, y: 4 });
   const [dir, setDir] = useState<{ x: number; y: number }>({ x: 1, y: 0 });
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -146,44 +146,44 @@ export default function SnakeGame({ onClose, language }: SnakeGameProps) {
   const grid = renderGrid();
 
   return (
-    <div className="flex flex-col h-full font-mono text-xs sm:text-sm select-none p-2 text-emerald-400">
-      <div className="flex justify-between items-center mb-2 pb-1 border-b border-zinc-900/50">
+    <div className="flex flex-col h-full font-mono text-[10px] sm:text-xs select-none p-1 text-emerald-400">
+      <div className="flex justify-between items-center mb-1 pb-1 border-b border-zinc-900/50">
         <span>SCORE: {score}</span>
-        <span className="text-[10px] text-zinc-500">
-          {language === "tr" ? "[Çıkmak için ESC]" : "[ESC to Quit]"}
+        <span className="text-[9px] text-zinc-500">
+          {language === "tr" ? "[ESC ile Çık]" : "[ESC to Exit]"}
         </span>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center bg-zinc-950/80 p-2 border border-zinc-900/40 rounded">
+      <div className="flex-1 flex flex-col items-center justify-center bg-zinc-950/80 p-1 border border-zinc-900/40 rounded overflow-hidden">
         {gameOver ? (
-          <div className="text-center flex flex-col gap-2">
-            <span className="text-red-500 font-bold tracking-widest animate-pulse">
+          <div className="text-center flex flex-col gap-1">
+            <span className="text-red-500 font-bold tracking-widest animate-pulse text-[10px] sm:text-xs">
               GAME OVER
             </span>
             <button
               onClick={() => {
                 setSnake([
-                  { x: 10, y: 6 },
-                  { x: 9, y: 6 },
-                  { x: 8, y: 6 },
+                  { x: 8, y: 4 },
+                  { x: 7, y: 4 },
+                  { x: 6, y: 4 },
                 ]);
                 setDir({ x: 1, y: 0 });
                 setScore(0);
                 setGameOver(false);
               }}
-              className="px-2 py-1 bg-zinc-900 text-zinc-300 hover:text-white rounded text-[10px] border border-zinc-800"
+              className="px-2 py-0.5 bg-zinc-900 text-zinc-300 hover:text-white rounded text-[9px] border border-zinc-800"
             >
               {language === "tr" ? "Yeniden Başla" : "Restart"}
             </button>
             <button
               onClick={() => onClose(score)}
-              className="text-zinc-500 hover:text-zinc-400 text-[10px]"
+              className="text-zinc-500 hover:text-zinc-400 text-[9px]"
             >
               {language === "tr" ? "Kapat" : "Exit"}
             </button>
           </div>
         ) : (
-          <div className="leading-none tracking-[0.2em] font-bold text-center">
+          <div className="text-[8px] sm:text-[10px] leading-[1] tracking-[0.2em] font-bold text-center">
             <div>+{Array(COLS).fill("-").join("")}+</div>
             {grid.map((row, idx) => (
               <div key={idx}>
@@ -194,7 +194,7 @@ export default function SnakeGame({ onClose, language }: SnakeGameProps) {
           </div>
         )}
       </div>
-      <div className="text-center text-[10px] text-zinc-600 mt-2">
+      <div className="text-center text-[8px] text-zinc-600 mt-1">
         {language === "tr" ? "Yön tuşları veya W-A-S-D ile kontrol edin" : "Control with Arrow Keys or W-A-S-D"}
       </div>
     </div>
