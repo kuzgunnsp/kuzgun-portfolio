@@ -1,20 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-
-const commands = [
-  { name: "help", desc: "Kullanılabilir tüm komutları listeler" },
-  { name: "about", desc: "Hakkımda bölümüne hızlı geçiş yapar" },
-  { name: "projects", desc: "Projeler bölümüne hızlı geçiş yapar" },
-  { name: "skills", desc: "Yetkinlikler bölümüne hızlı geçiş yapar" },
-  { name: "workflow", desc: "Çalışma şeması bölümüne hızlı geçiş yapar" },
-  { name: "contact", desc: "İletişim bölümüne hızlı geçiş yapar" },
-  { name: "matrix", desc: "Arka plan Matrix yağmurunu açar/kapatır" },
-  { name: "clear", desc: "Konsol geçmişini temizler" },
-  { name: "exit", desc: "Komut paletini kapatır" },
-];
+import { useLanguage } from "./LanguageContext";
 
 export default function CommandPalette() {
+  const { language, setLanguage, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
@@ -22,6 +12,19 @@ export default function CommandPalette() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const commands = [
+    { name: "help", desc: t("Kullanılabilir tüm komutları listeler", "Lists all available commands") },
+    { name: "about", desc: t("Hakkımda bölümüne hızlı geçiş yapar", "Quick jump to About section") },
+    { name: "projects", desc: t("Projeler bölümüne hızlı geçiş yapar", "Quick jump to Projects section") },
+    { name: "skills", desc: t("Yetkinlikler bölümüne hızlı geçiş yapar", "Quick jump to Skills section") },
+    { name: "workflow", desc: t("Çalışma şeması bölümüne hızlı geçiş yapar", "Quick jump to Workflow section") },
+    { name: "contact", desc: t("İletişim bölümüne hızlı geçiş yapar", "Quick jump to Contact section") },
+    { name: "matrix", desc: t("Arka plan Matrix yağmurunu açar/kapatır", "Toggles background Matrix rain") },
+    { name: "lang", desc: t("Dil değiştir (lang tr / lang en)", "Change language (lang tr / lang en)") },
+    { name: "clear", desc: t("Konsol geçmişini temizler", "Clears console history") },
+    { name: "exit", desc: t("Komut paletini kapatır", "Closes command palette") },
+  ];
 
   // Keyboard shortcut Ctrl+K / Cmd+K to open
   useEffect(() => {
@@ -44,7 +47,7 @@ export default function CommandPalette() {
         inputRef.current?.focus();
         setSelectedIndex(0);
         setInput("");
-        setTerminalLogs(["Kuzgun CLI Paleti v1.0.0. Komut girin veya listeden seçin."]);
+        setTerminalLogs([t("Kuzgun CLI Paleti v1.0.0. Komut girin veya listeden seçin.", "Kuzgun CLI Palette v1.0.0. Enter a command or select from list.")]);
       }, 50);
     }
   }, [isOpen]);
@@ -85,22 +88,33 @@ export default function CommandPalette() {
     if (cleanCmd === "matrix") {
       // Dispatch custom event for global matrix rain toggling
       window.dispatchEvent(new CustomEvent("toggle-global-matrix"));
-      setTerminalLogs((prev) => [...prev, "> Matrix yağmuru tetiklendi."]);
+      setTerminalLogs((prev) => [...prev, t("> Matrix yağmuru tetiklendi.", "> Matrix rain triggered.")]);
       setInput("");
       setTimeout(() => setIsOpen(false), 500);
       return;
     }
 
+    if (cleanCmd.startsWith("lang ")) {
+      const newLang = cleanCmd.split(" ")[1];
+      if (newLang === "tr" || newLang === "en") {
+        setLanguage(newLang);
+        setTerminalLogs((prev) => [...prev, newLang === "tr" ? "> Dil Türkçe olarak ayarlandı." : "> Language set to English."]);
+        setInput("");
+        setTimeout(() => setIsOpen(false), 500);
+        return;
+      }
+    }
+
     if (["about", "projects", "skills", "workflow", "contact"].includes(cleanCmd)) {
       const element = document.getElementById(cleanCmd);
       if (element) {
-        setTerminalLogs((prev) => [...prev, `> #${cleanCmd} konumuna yönlendiriliyor...`]);
+        setTerminalLogs((prev) => [...prev, t(`> #${cleanCmd} konumuna yönlendiriliyor...`, `> Redirecting to #${cleanCmd}...`)]);
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth" });
           setIsOpen(false);
         }, 300);
       } else {
-        setTerminalLogs((prev) => [...prev, `> Hata: #${cleanCmd} hedefi bulunamadı.`]);
+        setTerminalLogs((prev) => [...prev, t(`> Hata: #${cleanCmd} hedefi bulunamadı.`, `> Error: #${cleanCmd} target not found.`)]);
       }
       setInput("");
       return;
@@ -109,7 +123,7 @@ export default function CommandPalette() {
     if (cleanCmd === "help") {
       setTerminalLogs((prev) => [
         ...prev,
-        "> Kullanılabilir Komutlar:",
+        t("> Kullanılabilir Komutlar:", "> Available Commands:"),
         ...commands.map((c) => `  ${c.name.padEnd(10)} - ${c.desc}`),
       ]);
       setInput("");
@@ -119,7 +133,10 @@ export default function CommandPalette() {
     // Default response
     setTerminalLogs((prev) => [
       ...prev,
-      `> Hata: '${cleanCmd}' geçerli bir komut değil. 'help' yazarak yardım alabilirsiniz.`,
+      t(
+        `> Hata: '${cleanCmd}' geçerli bir komut değil. 'help' yazarak yardım alabilirsiniz.`,
+        `> Error: '${cleanCmd}' is not a valid command. Type 'help' for assistance.`
+      ),
     ]);
     setInput("");
   };
@@ -150,7 +167,7 @@ export default function CommandPalette() {
       <div className="fixed bottom-6 left-6 z-40 hidden md:block select-none pointer-events-none">
         <div className="px-3 py-1.5 rounded-lg bg-zinc-950/80 backdrop-blur-md border border-zinc-900/60 text-[10px] font-mono text-zinc-500 flex items-center gap-2 shadow-lg">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 animate-pulse" />
-          <span>Komut Paleti:</span>
+          <span>{t("Komut Paleti:", "Command Palette:")}</span>
           <kbd className="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] text-zinc-400 font-sans font-semibold">Ctrl</kbd>
           <span>+</span>
           <kbd className="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[9px] text-zinc-400 font-sans font-semibold">K</kbd>
@@ -224,7 +241,7 @@ export default function CommandPalette() {
             </div>
           ) : (
             <div className="p-4 text-center text-zinc-600 text-[10px]">
-              Eşleşen komut bulunamadı.
+              {t("Eşleşen komut bulunamadı.", "No matching command found.")}
             </div>
           )}
         </div>

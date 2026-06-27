@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useLanguage } from "./LanguageContext";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -26,10 +28,10 @@ export default function Navbar() {
   }, []);
 
   const navItems = [
-    { name: "Projeler", href: "#projects" },
-    { name: "Yetenekler", href: "#skills" },
-    { name: "Hakkımda", href: "#about" },
-    { name: "İletişim", href: "#contact" },
+    { name: t("Projeler", "Projects"), href: "#projects" },
+    { name: t("Yetenekler", "Skills"), href: "#skills" },
+    { name: t("Hakkımda", "About"), href: "#about" },
+    { name: t("İletişim", "Contact"), href: "#contact" },
   ];
 
   return (
@@ -107,8 +109,15 @@ export default function Navbar() {
             href="#contact"
             className="hidden lg:block px-4 py-2 rounded-full border border-zinc-800 text-xs font-medium tracking-wider text-zinc-300 uppercase transition-all duration-300 hover:bg-zinc-100 hover:text-zinc-950 hover:border-zinc-100 font-mono"
           >
-            İletişime Geç
+            {t("İletişime Geç", "Get in Touch")}
           </a>
+          <button
+            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+            className="px-2.5 py-1 rounded border border-zinc-800 text-[10px] font-mono text-zinc-500 hover:text-emerald-400 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 cursor-pointer uppercase select-none shrink-0"
+            aria-label="Toggle language"
+          >
+            {language === "tr" ? "en" : "tr"}
+          </button>
         </nav>
 
         {/* Mobil Menü Butonu */}
@@ -166,8 +175,17 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(false)}
             className="w-full text-center px-5 py-3 rounded-full border border-zinc-800 text-xs font-medium tracking-wider text-zinc-300 uppercase font-mono hover:bg-zinc-100 hover:text-zinc-950 transition-all"
           >
-            İletişime Geç
+            {t("İletişime Geç", "Get in Touch")}
           </a>
+          <button
+            onClick={() => {
+              setLanguage(language === "tr" ? "en" : "tr");
+              setMobileMenuOpen(false);
+            }}
+            className="w-full text-center px-5 py-2.5 rounded-full border border-zinc-900 bg-zinc-950 text-[10px] font-medium tracking-wider text-zinc-400 uppercase font-mono hover:text-emerald-400 transition-all cursor-pointer"
+          >
+            LANGUAGE: {language.toUpperCase()}
+          </button>
         </div>
       </div>
     </header>

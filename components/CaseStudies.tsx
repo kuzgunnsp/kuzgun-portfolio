@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useLanguage } from "./LanguageContext";
 
 // Proje verileri ve vaka analizi içerikleri
 const projectsData = [
@@ -11,8 +12,11 @@ const projectsData = [
     role: "Lead Developer & UI/UX Designer",
     techs: ["WordPress", "PHP", "WooCommerce", "Vanilla JS", "Tailwind CSS", "OCDI"],
     overview: "Lystra Studio, modern e-ticaret sitelerinin yüksek performans ve estetik ihtiyaçlarını karşılamak üzere tasarlanmış, editoryal lüks (editorial luxury) konseptine sahip, yüksek dönüşüm odaklı ve ultra hızlı bir premium WooCommerce temasıdır. Vogue ve Kinfolk gibi lüks tasarım dergilerinin dingin, asimetrik ve prestijli estetiğini dijital mağazalara taşır.",
+    overviewEn: "Lystra Studio is a premium WooCommerce theme designed with an editorial luxury concept to meet the high performance and aesthetic needs of modern e-commerce sites. It brings the serene, asymmetric and prestigious aesthetics of luxury design magazines like Vogue and Kinfolk to digital stores.",
     problem: "Geleneksel WooCommerce temalarının Elementor, WPBakery gibi hantal sayfa yapıcılar, düzinelerce yavaş eklenti ve eski jQuery kütüphaneleriyle siteleri aşırı yavaşlatması (PageSpeed skorlarının düşmesi), güvenlik açıkları yaratması ve standart, tek düze 'kutu' tasarımlarla premium marka imajına zarar vermesi.",
+    problemEn: "Traditional WooCommerce themes slowing down sites with bloated page builders like Elementor and WPBakery, dozens of slow plugins and legacy jQuery libraries (causing PageSpeed scores to drop), creating security vulnerabilities, and damaging premium brand image with standard, uniform 'box' designs.",
     solution: "Hiçbir sayfa yapıcıya ihtiyaç duymayan çekirdek WooCommerce entegrasyonu. Tamamı ham Vanilla JS ile sıfırdan kodlanmış, jQuery bağımlılığı olmayan interaktif modüller (AJAX Yan Sepet, Arama ve Ücretsiz Kargo Çubuğu). Yayına çıkarken 99KB'a sıkıştırılmış Tailwind CSS mimarisi ve %100 güvenli, WordPress Theme Check standartlarına uygun, XSS/SQL enjeksiyon korumalı (sanitized & escaped) PHP altyapısı.",
+    solutionEn: "Core WooCommerce integration requiring no page builder. All interactive modules coded from scratch with raw Vanilla JS without jQuery dependency (AJAX Side Cart, Search and Free Shipping Bar). Tailwind CSS architecture compressed to 99KB at launch, and 100% secure PHP infrastructure compliant with WordPress Theme Check standards, with XSS/SQL injection protection (sanitized & escaped).",
     links: {
       appStore: null,
       playStore: null,
@@ -30,8 +34,11 @@ const projectsData = [
     role: "Lead Developer & UI/UX Designer",
     techs: ["Flutter", "Dart", "Riverpod", "SQLite", "Compass API", "WidgetKit"],
     overview: "Huzur Vakti Pro, Müslümanların günlük ibadetlerini en doğru şekilde takip etmeleri için tasarlanmış, altın ve koyu tema estetiğine sahip, reklamsız ve gizlilik odaklı premium bir mobil uygulamadır.",
+    overviewEn: "Huzur Vakti Pro is a premium, ad-free and privacy-focused mobile app designed with gold and dark theme aesthetics for Muslims to track their daily prayers most accurately.",
     problem: "Mevcut ibadet uygulamalarının aşırı agresif reklamlar, karmaşık ve yaşlılar için zorlayıcı arayüzler, pili hızla tüketen verimsiz konum servisleri ile ibadet odağını ve huzurunu bozması.",
+    problemEn: "Existing prayer apps disrupting worship focus and peace with overly aggressive ads, complex interfaces difficult for elderly users, and inefficient location services that rapidly drain battery.",
     solution: "Flutter ve Dart kullanılarak geliştirilen, pil dostu ve reklamsız bir altyapı. Diyanet İşleri Başkanlığı uyumlu hassas yerel vakit hesaplama motoru, animasyonlu pusula sensörü entegrasyonu, cüz cüz sesli okuma için gelişmiş ses oynatıcı motoru ve iOS/Android için akıllı kilit ekranı widget desteği.",
+    solutionEn: "Battery-friendly and ad-free infrastructure developed using Flutter and Dart. Precise local prayer time calculation engine compatible with Turkey's Directorate of Religious Affairs, animated compass sensor integration, advanced audio player engine for chapter-by-chapter Quran recitation, and smart lock screen widget support for iOS/Android.",
     links: {
       appStore: "https://apps.apple.com/us/app/huzur-vakti-ezan-kuran-k%C4%B1ble/id6755821374",
       playStore: "https://play.google.com/store/apps/details?id=com.kuzgun.ezanvakti",
@@ -49,8 +56,11 @@ const projectsData = [
     role: "Lead Mobile Developer & UI/UX Designer",
     techs: ["Flutter", "Dart", "BLoC Pattern", "Hive DB", "Firebase FCM", "REST API"],
     overview: "Merkezi Nokta, güncel gelişmeleri, son dakika haberlerini ve spor haberlerini kullanıcılara anlık bildirimlerle ve yüksek performanslı bir arayüzle sunan modern bir mobil haber portalı uygulamasıdır.",
+    overviewEn: "Merkezi Nokta is a modern mobile news portal app that delivers breaking news, current developments and sports news to users with instant notifications and a high-performance interface.",
     problem: "Haber uygulamalarının aşırı reklam yükü, hantal veri çekme işlemleri, yavaş yüklenme süreleri ve çevrimdışı okuma desteği barındırmaması nedeniyle kullanıcıların güncel bilgiye hızla ulaşamaması.",
+    problemEn: "Users unable to quickly access current information due to excessive ad loads, slow data fetching, sluggish loading times, and lack of offline reading support in news apps.",
     solution: "Flutter ve Dart kullanılarak BLoC mimarisiyle geliştirilen hafif haber motoru. Hive yerel veritabanı ile tam çevrimdışı önbellekleme (caching) sistemi. Firebase Cloud Messaging entegrasyonuyla 1 saniyenin altında son dakika bildirim iletimi, asimetrik haber slider'ı ve dinamik kategori filtresi.",
+    solutionEn: "Lightweight news engine developed with Flutter and Dart using BLoC architecture. Full offline caching system with Hive local database. Breaking news notification delivery under 1 second with Firebase Cloud Messaging integration, asymmetric news slider and dynamic category filter.",
     links: {
       appStore: null,
       playStore: null,
@@ -68,8 +78,11 @@ const projectsData = [
     role: "Solo Game Developer & 3D Artist",
     techs: ["Unity", "C#", "Blender", "FMOD Sound System", "UniTask"],
     overview: "LingoQuest, oyuncuların harfleri birleştirerek kelimeler türettiği, kelime dağarcığıyla taktiksel bölgeleri fethettiği, zengin ses atmosferine ve derin oynanış mekaniklerine sahip tek oyunculu bir strateji-bulmaca oyunudur.",
+    overviewEn: "LingoQuest is a single-player strategy-puzzle game where players create words by combining letters, conquer tactical territories with their vocabulary, featuring rich sound atmosphere and deep gameplay mechanics.",
     problem: "Klasik kelime oyunlarının birbirinin kopyası olan monoton bulmaca yapısı. Oyuncuların kelime bilgilerini kullanırken taktiksel kararlar verebilecekleri ve ilerleme kaydedebilecekleri bir hikaye tabanlı oyun döngüsünün eksikliği.",
+    problemEn: "Monotonous puzzle structure of classic word games being copies of each other. Lack of a story-based game loop where players can make tactical decisions and track progress while using their word knowledge.",
     solution: "Unity motoru ile C# dilinde geliştirilmiştir. Nesne tabanlı oyun mimarisi ve optimize edilmiş oyun döngüsü için UniTask asenkron kütüphaneleri kullanılmıştır. Oyundaki minimalist 3D modeller Blender ile tasarlanmış ve FMOD ile dinamik, etkileşimli bir ses tasarımı entegre edilmiştir.",
+    solutionEn: "Developed with Unity engine in C#. Object-oriented game architecture and UniTask asynchronous libraries for optimized game loop. Minimalist 3D models designed in Blender and dynamic, interactive sound design integrated with FMOD.",
     links: {
       appStore: null,
       playStore: "https://play.google.com",
@@ -90,6 +103,7 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
   const [activeTab, setActiveTab] = useState<"overview" | "problem" | "solution">("overview");
   const [isHovered, setIsHovered] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!isHovered) return;
@@ -244,18 +258,18 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
                     : "border-transparent text-zinc-500 hover:text-zinc-300"
                 }`}
               >
-                {tab === "overview" && "Genel Bakış"}
-                {tab === "problem" && "Çözülen Problem"}
-                {tab === "solution" && "Teknik Çözüm"}
+                {tab === "overview" && t("Genel Bakış", "Overview")}
+                {tab === "problem" && t("Çözülen Problem", "Problem Solved")}
+                {tab === "solution" && t("Teknik Çözüm", "Technical Solution")}
               </button>
             ))}
           </div>
 
           {/* Sekme İçerik Alanı */}
           <div className="min-h-[140px] w-full text-zinc-400 text-xs md:text-sm leading-relaxed py-2">
-            {activeTab === "overview" && <p className="animate-fade-in">{project.overview}</p>}
-            {activeTab === "problem" && <p className="animate-fade-in">{project.problem}</p>}
-            {activeTab === "solution" && <p className="animate-fade-in">{project.solution}</p>}
+            {activeTab === "overview" && <p className="animate-fade-in">{t(project.overview, project.overviewEn)}</p>}
+            {activeTab === "problem" && <p className="animate-fade-in">{t(project.problem, project.problemEn)}</p>}
+            {activeTab === "solution" && <p className="animate-fade-in">{t(project.solution, project.solutionEn)}</p>}
           </div>
 
           {/* Aksiyon Linkleri */}
@@ -293,7 +307,7 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-zinc-100 text-zinc-950 text-[10px] md:text-xs font-bold hover:bg-white transition-all font-mono shadow-md shadow-black/20"
               >
-                Canlı Demoyu Gör
+                {t("Canlı Demoyu Gör", "View Live Demo")}
                 <svg
                   className="w-3 h-3 stroke-current"
                   fill="none"
@@ -475,6 +489,8 @@ function ProjectCard({ project, index }: { project: typeof projectsData[0]; inde
 }
 
 export default function CaseStudies() {
+  const { t } = useLanguage();
+
   return (
     <section id="projects" className="py-32 bg-zinc-950 border-t border-zinc-900/30 relative overflow-hidden">
       {/* İnce Geometrik Arka Plan Çizgileri */}
@@ -486,14 +502,17 @@ export default function CaseStudies() {
           <div className="flex items-center gap-2">
             <span className="h-[1px] w-8 bg-zinc-800"></span>
             <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
-              [ 02 // SEÇİLMİŞ İŞLER ]
+              {t("[ 02 // SEÇİLMİŞ İŞLER ]", "[ 02 // SELECTED WORKS ]")}
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
-            Vaka Analizleri <span className="text-zinc-500">& Projeler</span>
+            {t("Vaka Analizleri", "Case Studies")} <span className="text-zinc-500">{t("& Projeler", "& Projects")}</span>
           </h2>
           <p className="text-zinc-400 text-xs md:text-sm max-w-xl leading-relaxed mt-2">
-            Sadece kod yazmıyor; ürünün amacına, kullanıcı deneyimine ve temiz teknik mimarisine odaklanıyorum. İşte detaylı vaka analizleri:
+            {t(
+              "Sadece kod yazmıyor; ürünün amacına, kullanıcı deneyimine ve temiz teknik mimarisine odaklanıyorum. İşte detaylı vaka analizleri:",
+              "I don't just write code; I focus on the product's purpose, user experience and clean technical architecture. Here are detailed case studies:"
+            )}
           </p>
         </div>
 

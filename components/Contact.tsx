@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { useLanguage } from "./LanguageContext";
 
 // Platform verileri
 const platforms = [
   {
     name: "LinkedIn",
     tagline: "Profesyonel Ağ & Bağlantılar",
+    taglineEn: "Professional Network & Connections",
     url: "https://www.linkedin.com/in/mustafadumannn/",
     glowColor: "rgba(59, 130, 246, 0.12)", // Blue
     icon: (
@@ -19,6 +21,7 @@ const platforms = [
   {
     name: "Bionluk",
     tagline: "Yerel Freelance İş Birlikleri",
+    taglineEn: "Local Freelance Collaborations",
     url: "https://bionluk.com/mustafadumannn",
     glowColor: "rgba(16, 185, 129, 0.12)", // Emerald
     icon: (
@@ -30,6 +33,7 @@ const platforms = [
   {
     name: "Upwork",
     tagline: "Global Projeler & Kurumsal Kontratlar",
+    taglineEn: "Global Projects & Corporate Contracts",
     url: "https://www.upwork.com/freelancers/~019c51a2034bf5a868",
     glowColor: "rgba(245, 158, 11, 0.12)", // Amber
     icon: (
@@ -41,6 +45,7 @@ const platforms = [
   {
     name: "Fiverr",
     tagline: "Uluslararası Hizmetler & Bireysel İşler",
+    taglineEn: "International Services & Individual Projects",
     url: "https://www.fiverr.com/users/mustafadumann",
     glowColor: "rgba(168, 85, 247, 0.12)", // Purple
     icon: (
@@ -54,6 +59,7 @@ const platforms = [
 
 // Tekil Sosyal Platform Kartı Bileşeni - Spotlight Efektli
 function PlatformCard({ platform }: { platform: typeof platforms[0] }) {
+  const { t } = useLanguage();
   const cardRef = useRef<HTMLAnchorElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -112,7 +118,7 @@ function PlatformCard({ platform }: { platform: typeof platforms[0] }) {
             {platform.name}
           </h4>
           <p className="text-[10px] md:text-[11px] text-zinc-500 leading-normal">
-            {platform.tagline}
+            {t(platform.tagline, platform.taglineEn)}
           </p>
         </div>
       </div>
@@ -121,6 +127,7 @@ function PlatformCard({ platform }: { platform: typeof platforms[0] }) {
 }
 
 export default function Contact() {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const emailAddress = "kuzgunnx@outlook.com";
   
@@ -162,12 +169,12 @@ export default function Contact() {
           <div className="flex items-center gap-2">
             <span className="h-[1px] w-8 bg-zinc-800"></span>
             <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
-              [ 06 // İLETİŞİM ]
+              {t("[ 06 // İLETİŞİM ]", "[ 06 // CONTACT ]")}
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            Bir Sonraki Fikri <br />
-            <span className="text-zinc-500">Birlikte İnşa Edelim.</span>
+            {t("Bir Sonraki Fikri", "Let's Build the Next")} <br />
+            <span className="text-zinc-500">{t("Birlikte İnşa Edelim.", "Idea Together.")}</span>
           </h2>
         </div>
 
@@ -178,10 +185,13 @@ export default function Contact() {
             <div className="w-full h-full rounded-[15px] bg-zinc-950/95 p-8 md:p-10 flex flex-col justify-between gap-8 backdrop-blur-md">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-bold text-white tracking-tight">
-                  Doğrudan İletişim Hattı
+                  {t("Doğrudan İletişim Hattı", "Direct Communication Line")}
                 </h3>
                 <p className="text-xs md:text-sm text-zinc-400 leading-relaxed">
-                  Aklınızda bir proje mi var? Mobil uygulama, web platformu veya Unity tabanlı bir oyun fikri... Benimle doğrudan e-posta yoluyla iletişime geçebilir, fikirlerinizi paylaşabilirsiniz. En geç 24 saat içinde dönüş yaparım.
+                  {t(
+                    "Aklınızda bir proje mi var? Mobil uygulama, web platformu veya Unity tabanlı bir oyun fikri... Benimle doğrudan e-posta yoluyla iletişime geçebilir, fikirlerinizi paylaşabilirsiniz. En geç 24 saat içinde dönüş yaparım.",
+                    "Got a project in mind? A mobile app, web platform or Unity-based game idea... You can contact me directly via email and share your ideas. I'll get back to you within 24 hours."
+                  )}
                 </p>
               </div>
 
@@ -208,7 +218,7 @@ export default function Contact() {
                 <div className="relative z-10 rounded-[11px] bg-zinc-950/90 p-5 flex items-center justify-between">
                   <div className="flex flex-col gap-1">
                     <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-widest">
-                      E-POSTA ADRESİ (KOPYALAMAK İÇİN TIKLAYIN)
+                      {t("E-POSTA ADRESİ (KOPYALAMAK İÇİN TIKLAYIN)", "EMAIL ADDRESS (CLICK TO COPY)")}
                     </span>
                     <span className="text-xs md:text-sm font-bold font-mono text-zinc-100 group-hover:text-white transition-colors">
                       {emailAddress}
@@ -240,7 +250,7 @@ export default function Contact() {
                   }`}
                 >
                   <span className="text-emerald-400">✓</span>
-                  E-posta adresi kopyalandı.
+                  {t("E-posta adresi kopyalandı.", "Email address copied.")}
                 </div>
               </div>
             </div>
@@ -300,10 +310,10 @@ export default function Contact() {
             ) : (
               <div className="w-6 h-6" />
             )}
-            <span>© {new Date().getFullYear()} KUZGUN. Tüm hakları saklıdır.</span>
+            <span>{t(`© ${new Date().getFullYear()} KUZGUN. Tüm hakları saklıdır.`, `© ${new Date().getFullYear()} KUZGUN. All rights reserved.`)}</span>
           </div>
           <span className="text-center sm:text-right">
-            Next.js & TailwindCSS v4 ile tasarlanıp kodlandı.
+            {t("Next.js & TailwindCSS v4 ile tasarlanıp kodlandı.", "Designed and coded with Next.js & TailwindCSS v4.")}
           </span>
         </div>
       </div>

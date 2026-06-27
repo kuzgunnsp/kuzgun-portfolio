@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useLanguage } from "./LanguageContext";
 
 // Yetenek verileri ve kategorileri
 const skillCategories = [
   {
     title: "Mobil Mimariler",
+    titleEn: "Mobile Architectures",
     description: "Çapraz platform ve yerel (native) mobil uygulama geliştirme, yüksek performanslı mimariler ve entegrasyonlar.",
+    descriptionEn: "Cross-platform and native mobile app development, high-performance architectures and integrations.",
     glowColor: "rgba(99, 102, 241, 0.15)", // Indigo
     icon: (
       <svg className="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -15,10 +18,13 @@ const skillCategories = [
       </svg>
     ),
     skills: ["Flutter", "Dart", "Swift", "SwiftUI", "Jetpack Compose", "Riverpod", "HealthKit", "CoreData", "REST API Entegrasyonu"],
+    skillsEn: ["Flutter", "Dart", "Swift", "SwiftUI", "Jetpack Compose", "Riverpod", "HealthKit", "CoreData", "REST API Integration"],
   },
   {
     title: "Web Teknolojileri",
+    titleEn: "Web Technologies",
     description: "Modern, hızlı ve SEO odaklı tam yığın (full-stack) web uygulamaları, statik site mimarileri ve interaktif arayüzler.",
+    descriptionEn: "Modern, fast and SEO-focused full-stack web applications, static site architectures and interactive interfaces.",
     glowColor: "rgba(16, 185, 129, 0.15)", // Emerald
     icon: (
       <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -28,10 +34,13 @@ const skillCategories = [
       </svg>
     ),
     skills: ["Next.js", "React", "TypeScript", "JavaScript", "TailwindCSS v4", "Vercel", "HTML5 & CSS3", "Node.js", "Headless CMS"],
+    skillsEn: ["Next.js", "React", "TypeScript", "JavaScript", "TailwindCSS v4", "Vercel", "HTML5 & CSS3", "Node.js", "Headless CMS"],
   },
   {
     title: "Oyun Geliştirme",
+    titleEn: "Game Development",
     description: "2D/3D oyun mekanikleri, oyun döngüsü optimizasyonları, dinamik ses entegrasyonları ve 3D model tasarımları.",
+    descriptionEn: "2D/3D game mechanics, game loop optimizations, dynamic audio integrations and 3D model designs.",
     glowColor: "rgba(245, 158, 11, 0.15)", // Amber
     icon: (
       <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -40,10 +49,13 @@ const skillCategories = [
       </svg>
     ),
     skills: ["Unity Engine", "C#", "Blender (3D Modelleme)", "FMOD Audio", "UniTask", "Oyun Döngüsü Optimizasyonu", "UI/UX Mekanikleri"],
+    skillsEn: ["Unity Engine", "C#", "Blender (3D Modeling)", "FMOD Audio", "UniTask", "Game Loop Optimization", "UI/UX Mechanics"],
   },
   {
     title: "Tasarım & İş Akışları",
+    titleEn: "Design & Workflows",
     description: "Kullanıcı deneyimi analizi, görsel kimlik tasarımı, modüler bileşen sistemleri ve profesyonel yazılım süreçleri.",
+    descriptionEn: "User experience analysis, visual identity design, modular component systems and professional software processes.",
     glowColor: "rgba(168, 85, 247, 0.15)", // Purple
     icon: (
       <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -51,11 +63,13 @@ const skillCategories = [
       </svg>
     ),
     skills: ["UI/UX Tasarım", "Figma", "Git & GitHub", "Clean Architecture", "MVVM & BLoC", "Scrum / Agile", "Tipografi & Grid Düzenleri"],
+    skillsEn: ["UI/UX Design", "Figma", "Git & GitHub", "Clean Architecture", "MVVM & BLoC", "Scrum / Agile", "Typography & Grid Layouts"],
   },
 ];
 
 // Tekil Yetenek Kartı Bileşeni - Mouse Spotlight & Glow Efekti
 function SkillCard({ category }: { category: typeof skillCategories[0] }) {
+  const { t } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -69,13 +83,16 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
     setMousePos({ x, y });
   };
 
+  const localizedTitle = t(category.title, category.titleEn);
+  const localizedSkills = t(category.skills, category.skillsEn);
+
   useEffect(() => {
     if (!isHovered) return;
 
     const lines = [
       `> Initializing terminal check...`,
-      `> Connecting library: ${category.title.toLowerCase().replace(" ", "_")}...`,
-      ...category.skills.slice(0, 3).map((s) => `> Verified: ${s}... [OK]`),
+      `> Connecting library: ${localizedTitle.toLowerCase().replace(" ", "_")}...`,
+      ...localizedSkills.slice(0, 3).map((s: string) => `> Verified: ${s}... [OK]`),
       `> ALL SYSTEMS GO - 100% READY`,
     ];
 
@@ -90,7 +107,7 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
     }, 120);
 
     return () => clearInterval(interval);
-  }, [isHovered, category]);
+  }, [isHovered, category, localizedTitle, localizedSkills]);
 
   return (
     <div
@@ -131,13 +148,13 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
             {category.icon}
           </div>
           <h3 className="text-lg md:text-xl font-bold text-white tracking-tight">
-            {category.title}
+            {t(category.title, category.titleEn)}
           </h3>
         </div>
 
         {/* Açıklama */}
         <p className="text-zinc-400 text-xs md:text-sm leading-relaxed">
-          {category.description}
+          {t(category.description, category.descriptionEn)}
         </p>
 
         {/* Yetenek Etiketleri VEYA Terminal Konsolu */}
@@ -148,7 +165,7 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
               isHovered ? "opacity-0 pointer-events-none scale-95" : "opacity-100 scale-100"
             }`}
           >
-            {category.skills.map((skill) => (
+            {localizedSkills.map((skill: string) => (
               <span
                 key={skill}
                 className="px-3 py-1.5 rounded-full bg-zinc-900/25 border border-zinc-900/80 hover:border-zinc-800 text-[10px] font-mono text-zinc-300 hover:text-white transition-all duration-300"
@@ -184,6 +201,8 @@ function SkillCard({ category }: { category: typeof skillCategories[0] }) {
 }
 
 export default function Skills() {
+  const { t } = useLanguage();
+
   return (
     <section id="skills" className="py-32 bg-zinc-950 border-t border-zinc-900/30 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6">
@@ -192,14 +211,17 @@ export default function Skills() {
           <div className="flex items-center gap-2">
             <span className="h-[1px] w-8 bg-zinc-800"></span>
             <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
-              [ 03 // YETKİNLİKLER ]
+              {t("[ 03 // YETKİNLİKLER ]", "[ 03 // COMPETENCIES ]")}
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
-            Teknik <span className="text-zinc-500">Cephanelik & Araçlar</span>
+            {t("Teknik", "Technical")} <span className="text-zinc-500">{t("Cephanelik & Araçlar", "Arsenal & Tools")}</span>
           </h2>
           <p className="text-zinc-400 text-xs md:text-sm max-w-xl leading-relaxed mt-2">
-            Mobil, web ve oyun ekosisteminde fikirleri yüksek performanslı dijital ürünlere dönüştürmek için kullandığım temel uzmanlıklarım:
+            {t(
+              "Mobil, web ve oyun ekosisteminde fikirleri yüksek performanslı dijital ürünlere dönüştürmek için kullandığım temel uzmanlıklarım:",
+              "My core competencies for transforming ideas into high-performance digital products in mobile, web and game ecosystems:"
+            )}
           </p>
         </div>
 

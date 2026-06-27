@@ -1,15 +1,20 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { useLanguage } from "./LanguageContext";
 
 // Süreç adımları verisi
 const workflowSteps = [
   {
     step: "01",
     phase: "KEŞİF & STRATEJİ",
+    phaseEn: "DISCOVERY & STRATEGY",
     title: "İhtiyaç ve Hedef Analizi",
+    titleEn: "Needs and Goals Analysis",
     description: "Projenin iş hedeflerini, kullanıcı kitlesini ve teknik gereksinimlerini derinlemesine inceleyerek sağlam bir ürün ve mimari stratejisi oluşturuyorum.",
+    descriptionEn: "I thoroughly examine the project's business goals, target audience and technical requirements to create a solid product and architectural strategy.",
     details: ["Gereksinim Belirleme", "Kullanıcı Araştırması", "Teknoloji Seçimi & Yol Haritası"],
+    detailsEn: ["Requirements Gathering", "User Research", "Technology Selection & Roadmap"],
     glowColor: "rgba(245, 158, 11, 0.12)", // Amber
     icon: (
       <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -20,9 +25,13 @@ const workflowSteps = [
   {
     step: "02",
     phase: "UI/UX TASARIM",
+    phaseEn: "UI/UX DESIGN",
     title: "Rafine Arayüz Deneyimi",
+    titleEn: "Refined Interface Experience",
     description: "Dingin, asimetrik ve modern tasarım prensipleri doğrultusunda, markanın premium algısını yansıtan yüksek kaliteli arayüz prototipleri ve tasarım sistemleri hazırlıyorum.",
+    descriptionEn: "I prepare high-quality interface prototypes and design systems reflecting the brand's premium perception, following serene, asymmetric and modern design principles.",
     details: ["Figma ile Piksel Kusursuz Tasarım", "Kullanıcı Deneyimi (UX) Akışları", "Modüler Tasarım Sistemleri"],
+    detailsEn: ["Pixel-Perfect Design with Figma", "User Experience (UX) Flows", "Modular Design Systems"],
     glowColor: "rgba(168, 85, 247, 0.12)", // Purple
     icon: (
       <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -34,9 +43,13 @@ const workflowSteps = [
   {
     step: "03",
     phase: "MÜHENDİSLİK & KOD",
+    phaseEn: "ENGINEERING & CODE",
     title: "Temiz ve Performanslı Yazılım",
+    titleEn: "Clean and Performant Software",
     description: "Flutter, SwiftUI, Next.js veya Unity kullanarak, sürdürülebilir temiz kod (clean code) mimarisiyle, en yüksek performansa sahip, akıcı dijital ürünleri kodluyorum.",
+    descriptionEn: "Using Flutter, SwiftUI, Next.js or Unity, I code the most performant, fluid digital products with sustainable clean code architecture.",
     details: ["Clean Architecture & MVVM", "Durum Yönetimi (Riverpod/BLoC)", "Yüksek Hız ve Bellek Optimizasyonu"],
+    detailsEn: ["Clean Architecture & MVVM", "State Management (Riverpod/BLoC)", "High Speed & Memory Optimization"],
     glowColor: "rgba(16, 185, 129, 0.12)", // Emerald
     icon: (
       <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -47,9 +60,13 @@ const workflowSteps = [
   {
     step: "04",
     phase: "DOĞRULAMA & YAYIN",
+    phaseEn: "VALIDATION & RELEASE",
     title: "Hatasız Dağıtım ve Takip",
+    titleEn: "Flawless Deployment and Monitoring",
     description: "Kapsamlı test süreçleri, arayüz performans analizleri ve otomatik CI/CD hatları (Vercel, App Store, Play Store) kurarak ürünü sıfır hata ile son kullanıcıya ulaştırıyorum.",
+    descriptionEn: "I set up comprehensive test processes, interface performance analyses and automated CI/CD pipelines (Vercel, App Store, Play Store) to deliver the product to end users with zero errors.",
     details: ["Otomatik Entegrasyon Testleri", "SEO ve PageSpeed Skoru (100/100)", "CI/CD & Otomatik Dağıtım Kurulumu"],
+    detailsEn: ["Automated Integration Tests", "SEO & PageSpeed Score (100/100)", "CI/CD & Auto Deployment Setup"],
     glowColor: "rgba(59, 130, 246, 0.12)", // Blue
     icon: (
       <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -63,6 +80,7 @@ const workflowSteps = [
 function WorkflowStepCard({ step }: { step: typeof workflowSteps[0] }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { t } = useLanguage();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -109,7 +127,7 @@ function WorkflowStepCard({ step }: { step: typeof workflowSteps[0] }) {
             </span>
             <span className="h-[1px] w-4 bg-zinc-900"></span>
             <span className="text-[9px] font-mono tracking-widest text-zinc-500 uppercase">
-              Aşama
+              {t("Aşama", "Phase")}
             </span>
           </div>
           <div className="w-9 h-9 rounded-lg bg-zinc-900/45 border border-zinc-800/80 flex items-center justify-center transition-colors group-hover:bg-zinc-900/80">
@@ -120,13 +138,13 @@ function WorkflowStepCard({ step }: { step: typeof workflowSteps[0] }) {
         {/* Orta Kısım: Başlıklar ve Açıklama */}
         <div className="flex flex-col gap-3 my-auto">
           <span className="text-[9px] font-mono tracking-widest text-zinc-500 uppercase">
-            {step.phase}
+            {t(step.phase, step.phaseEn)}
           </span>
           <h3 className="text-base md:text-lg font-bold text-white tracking-tight">
-            {step.title}
+            {t(step.title, step.titleEn)}
           </h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
-            {step.description}
+            {t(step.description, step.descriptionEn)}
           </p>
         </div>
 
@@ -135,7 +153,7 @@ function WorkflowStepCard({ step }: { step: typeof workflowSteps[0] }) {
           {step.details.map((detail, idx) => (
             <div key={idx} className="flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-zinc-800 group-hover:bg-zinc-600 transition-colors"></span>
-              <span>{detail}</span>
+              <span>{t(detail, step.detailsEn[idx])}</span>
             </div>
           ))}
         </div>
@@ -146,6 +164,8 @@ function WorkflowStepCard({ step }: { step: typeof workflowSteps[0] }) {
 }
 
 export default function Workflow() {
+  const { t } = useLanguage();
+
   return (
     <section id="workflow" className="py-32 bg-zinc-950 border-t border-zinc-900/30 relative overflow-hidden">
       {/* 3D Arka Plan Ambient Işık Halkası */}
@@ -158,14 +178,17 @@ export default function Workflow() {
           <div className="flex items-center gap-2">
             <span className="h-[1px] w-8 bg-zinc-800"></span>
             <span className="text-xs font-mono tracking-widest text-zinc-500 uppercase">
-              [ 04 // METODOLOJİ ]
+              {t("[ 04 // METODOLOJİ ]", "[ 04 // METHODOLOGY ]")}
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
-            Fikirden Koda <span className="text-zinc-500">Mühendislik Süreci</span>
+            {t("Fikirden Koda", "From Idea to Code")} <span className="text-zinc-500">{t("Mühendislik Süreci", "Engineering Process")}</span>
           </h2>
           <p className="text-zinc-400 text-xs md:text-sm max-w-xl leading-relaxed mt-2">
-            Karmaşık problemleri çözmek ve hatasız dijital ürünler ortaya çıkarmak için uyguladığım disiplinli ve şeffaf çalışma adımları:
+            {t(
+              "Karmaşık problemleri çözmek ve hatasız dijital ürünler ortaya çıkarmak için uyguladığım disiplinli ve şeffaf çalışma adımları:",
+              "Disciplined and transparent working steps I follow to solve complex problems and produce flawless digital products:"
+            )}
           </p>
         </div>
 

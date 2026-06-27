@@ -5,6 +5,7 @@ import "./globals.css";
 import GlobalMatrixRain from "../components/GlobalMatrixRain";
 import CommandPalette from "../components/CommandPalette";
 import DebugWidget from "../components/DebugWidget";
+import { LanguageProvider } from "../components/LanguageContext";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -144,10 +145,12 @@ export default function RootLayout({
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        <GlobalMatrixRain />
-        {children}
-        <CommandPalette />
-        <DebugWidget />
+        <LanguageProvider>
+          <GlobalMatrixRain />
+          {children}
+          <CommandPalette />
+          <DebugWidget />
+        </LanguageProvider>
         <SpeedInsights />
       </body>
     </html>

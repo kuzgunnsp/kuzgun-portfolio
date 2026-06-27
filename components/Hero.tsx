@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useLanguage } from "./LanguageContext";
 
 export default function Hero() {
   // 3D Tilt / Mouse Takip Durum Yönetimi
@@ -17,6 +18,8 @@ export default function Hero() {
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const { language, setLanguage, t } = useLanguage();
+
   // Sayfa yüklendiğinde boot animasyonu
   useEffect(() => {
     // Açılış boot satırları sırayla yazılır
@@ -25,14 +28,14 @@ export default function Hero() {
     }, 150);
 
     const t2 = setTimeout(() => {
-      setHistory((prev) => [...prev, "Connecting to secure databases... Bağlantı kuruldu."]);
+      setHistory((prev) => [...prev, t("Connecting to secure databases... Bağlantı kuruldu.", "Connecting to secure databases... Connection established.")]);
     }, 550);
 
     const t3 = setTimeout(() => {
       setHistory((prev) => [
         ...prev,
-        "KUZGUN terminaline hoş geldiniz.",
-        "Komutları görmek için 'help' yazın veya aşağıdaki butonları kullanın."
+        t("KUZGUN terminaline hoş geldiniz.", "Welcome to KUZGUN terminal."),
+        t("Komutları görmek için 'help' yazın veya aşağıdaki butonları kullanın.", "Type 'help' to see commands or use the buttons below.")
       ]);
     }, 950);
 
@@ -41,6 +44,7 @@ export default function Hero() {
       clearTimeout(t2);
       clearTimeout(t3);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Terminal scroll ayarı
@@ -121,55 +125,69 @@ export default function Hero() {
       return;
     }
 
+    if (lowerCmd === "lang tr" || lowerCmd === "lang en") {
+      const newLang = lowerCmd.split(" ")[1] as "tr" | "en";
+      setLanguage(newLang);
+      newHistory.push(
+        newLang === "tr" 
+          ? "Dil Türkçe olarak ayarlandı." 
+          : "Language set to English."
+      );
+      setHistory(newHistory);
+      setInput("");
+      return;
+    }
+
     if (lowerCmd === "help") {
       newHistory.push(
-        "Kullanılabilir komutlar:",
-        "  about     - Geliştirici profilini görüntüle",
-        "  projects  - Portfolyo projelerini listele",
-        "  skills    - Teknik yetenekleri incele",
-        "  contact   - İletişim kanallarını göster",
-        "  matrix    - Matrix dijital yağmurunu aç/kapat",
-        "  clear     - Ekranı temizle"
+        t("Kullanılabilir komutlar:", "Available commands:"),
+        t("  about     - Geliştirici profilini görüntüle", "  about     - View developer profile"),
+        t("  projects  - Portfolyo projelerini listele", "  projects  - List portfolio projects"),
+        t("  skills    - Teknik yetenekleri incele", "  skills    - Explore technical skills"),
+        t("  contact   - İletişim kanallarını göster", "  contact   - Show contact channels"),
+        t("  matrix    - Matrix dijital yağmurunu aç/kapat", "  matrix    - Toggle Matrix digital rain"),
+        t("  lang      - Dil değiştir (lang tr / lang en)", "  lang      - Change language (lang tr / lang en)"),
+        t("  clear     - Ekranı temizle", "  clear     - Clear screen")
       );
     } else if (lowerCmd === "about") {
       newHistory.push(
-        "Kuzgun (Mustafa Duman) - Yazılım Geliştirici",
-        "Mobil uygulama, web platformları ve interaktif sistemler üzerine odaklanmış,",
-        "fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.",
-        "Sistem Hakkımda bölümüne yönlendiriliyor..."
+        t("Kuzgun (Mustafa Duman) - Yazılım Geliştirici", "Kuzgun (Mustafa Duman) - Software Developer"),
+        t("Mobil uygulama, web platformları ve interaktif sistemler üzerine odaklanmış,", "Focused on mobile apps, web platforms and interactive systems,"),
+        t("fütüristik tasarımları yüksek performanslı kodla birleştiren yaratıcı geliştirici.", "a creative developer combining futuristic designs with high-performance code."),
+        t("Sistem Hakkımda bölümüne yönlendiriliyor...", "Redirecting to About section...")
       );
       setTimeout(() => {
         document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
     } else if (lowerCmd === "projects") {
       newHistory.push(
-        "Tamamlanan Projeler Yükleniyor...",
-        "  - Lystra: Modern WooCommerce WordPress Teması",
-        "  - Namaz Vakitleri: Premium Tasarımlı Mobil Uygulama",
-        "  - Kuzgun Portfolio v1.0: Next.js ve TailwindCSS v4 Portfolyo",
-        "Sistem Projeler bölümüne yönlendiriliyor..."
+        t("Tamamlanan Projeler Yükleniyor...", "Loading Completed Projects..."),
+        t("  - Lystra: Modern WooCommerce WordPress Teması", "  - Lystra: Modern WooCommerce WordPress Theme"),
+        t("  - Namaz Vakitleri: Premium Tasarımlı Mobil Uygulama", "  - Prayer Times: Premium Designed Mobile App"),
+        t("  - Kuzgun Portfolio v1.0: Next.js ve TailwindCSS v4 Portfolyo", "  - Kuzgun Portfolio v1.0: Next.js & TailwindCSS v4 Portfolio"),
+        t("Sistem Projeler bölümüne yönlendiriliyor...", "Redirecting to Projects section...")
       );
       setTimeout(() => {
         document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
     } else if (lowerCmd === "skills") {
       newHistory.push(
-        "Teknik Stack Yükleniyor...",
+        t("Teknik Stack Yükleniyor...", "Loading Tech Stack..."),
         "  - Core: React, Next.js, TypeScript, Node.js",
         "  - Mobile: React Native, Flutter, Swift, CoreData",
         "  - Game/3D: Unity, C#, WebGL, Three.js, Canvas2D",
-        "Sistem Yetenekler bölümüne yönlendiriliyor..."
+        t("Sistem Yetenekler bölümüne yönlendiriliyor...", "Redirecting to Skills section...")
       );
       setTimeout(() => {
         document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
       }, 800);
     } else if (lowerCmd === "contact") {
       newHistory.push(
-        "İletişim Kanalları Bağlanıyor...",
+        t("İletişim Kanalları Bağlanıyor...", "Connecting Communication Channels..."),
         "  - E-posta: hello@kuzgun.dev",
         "  - LinkedIn: linkedin.com/in/mustafadumannn/",
         "  - Bionluk: bionluk.com/mustafadumannn",
-        "Sistem İletişim bölümüne yönlendiriliyor..."
+        t("Sistem İletişim bölümüne yönlendiriliyor...", "Redirecting to Contact section...")
       );
       setTimeout(() => {
         document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
@@ -178,11 +196,11 @@ export default function Hero() {
       setIsMatrix(!isMatrix);
       newHistory.push(
         !isMatrix 
-          ? "Matrix Dijital Yağmuru aktif edildi. Çıkmak için tekrar 'matrix' yazın."
-          : "Matrix Dijital Yağmuru kapatıldı."
+          ? t("Matrix Dijital Yağmuru aktif edildi. Çıkmak için tekrar 'matrix' yazın.", "Matrix Digital Rain activated. Type 'matrix' again to exit.")
+          : t("Matrix Dijital Yağmuru kapatıldı.", "Matrix Digital Rain deactivated.")
       );
     } else {
-      newHistory.push(`Komut bulunamadı: '${cmd}'. Seçenekler için 'help' yazın.`);
+      newHistory.push(t(`Komut bulunamadı: '${cmd}'. Seçenekler için 'help' yazın.`, `Command not found: '${cmd}'. Type 'help' for options.`));
     }
 
     setHistory(newHistory);
@@ -252,7 +270,7 @@ export default function Hero() {
           <div className="animate-fade-in flex items-center gap-2">
             <span className="h-[1px] w-8 bg-zinc-800"></span>
             <span className="text-[10px] md:text-xs font-mono tracking-widest text-zinc-500 uppercase">
-              [ 01 // YAZILIM & TASARIM ]
+              {t("[ 01 // YAZILIM & TASARIM ]", "[ 01 // SOFTWARE & DESIGN ]")}
             </span>
           </div>
 
@@ -263,16 +281,19 @@ export default function Hero() {
               Mobile & Web Developer // UI Designer
             </p>
             <h1 className="animate-slide-up text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] [animation-delay:200ms] text-white">
-              Temiz Kod. <br />
+              {t("Temiz Kod.", "Clean Code.")} <br />
               <span className="bg-gradient-to-r from-white via-zinc-300 to-zinc-600 bg-clip-text text-transparent">
-                Rafine Tasarım.
+                {t("Rafine Tasarım.", "Refined Design.")}
               </span>
             </h1>
           </div>
 
           {/* Kısa Tanıtım / Vizyon Cümlesi */}
           <p className="animate-slide-up text-sm md:text-base lg:text-lg text-zinc-400 max-w-xl leading-relaxed [animation-delay:400ms]">
-            Kuzgun markası altında, karmaşık yazılım problemlerini sade, yüksek performanslı ve estetik dijital ürünlere dönüştürüyorum. Flutter, SwiftUI, Unity ve Next.js teknolojileriyle sınırları zorlayan deneyimler inşa ediyorum.
+            {t(
+              "Kuzgun markası altında, karmaşık yazılım problemlerini sade, yüksek performanslı ve estetik dijital ürünlere dönüştürüyorum. Flutter, SwiftUI, Unity ve Next.js teknolojileriyle sınırları zorlayan deneyimler inşa ediyorum.",
+              "Under the Kuzgun brand, I transform complex software problems into clean, high-performance and aesthetic digital products. I build boundary-pushing experiences with Flutter, SwiftUI, Unity and Next.js technologies."
+            )}
           </p>
 
           {/* Yönlendirme Butonları */}
@@ -281,13 +302,13 @@ export default function Hero() {
               href="#projects"
               className="px-8 py-4 rounded-full bg-zinc-100 text-zinc-950 text-xs md:text-sm font-bold tracking-wider text-center uppercase transition-all duration-300 hover:bg-white hover:scale-[1.02] active:scale-[0.98] font-mono shadow-lg shadow-black/25"
             >
-              Projeleri İncele
+              {t("Projeleri İncele", "Explore Projects")}
             </a>
             <a
               href="#contact"
               className="px-8 py-4 rounded-full glass-panel text-zinc-300 text-xs md:text-sm font-bold tracking-wider text-center uppercase transition-all duration-300 hover:bg-zinc-900/60 hover:text-white hover:border-zinc-700/80 font-mono"
             >
-              İletişime Geç
+              {t("İletişime Geç", "Get in Touch")}
             </a>
           </div>
         </div>
@@ -386,7 +407,7 @@ export default function Hero() {
             {/* Hızlı Erişim Barı */}
             <div className="px-4 py-3 bg-zinc-950/95 border-t border-zinc-900 flex flex-wrap items-center gap-2 relative z-30 select-none">
               <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider shrink-0 mr-1 select-none">
-                HIZLI ERİŞİM:
+                {t("HIZLI ERİŞİM:", "QUICK ACCESS:")}
               </span>
               {["help", "about", "projects", "skills", "contact", "matrix"].map((cmd) => (
                 <button
