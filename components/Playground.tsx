@@ -334,11 +334,12 @@ export default function Playground() {
 
                 <button 
                   onClick={() => {
+                    window.dispatchEvent(
+                      new CustomEvent("kuzgun-init-system", {
+                        detail: { accent: accentColor, glow: glowColor, strength: glowStrength }
+                      })
+                    );
                     window.scrollTo({ top: 0, behavior: "smooth" });
-                    setTimeout(() => {
-                      const terminalInput = document.querySelector("input[type='text']") as HTMLInputElement;
-                      if (terminalInput) terminalInput.focus();
-                    }, 800);
                   }}
                   className="px-6 py-3 rounded-lg font-mono text-xs tracking-wider font-semibold transition-all duration-300 relative group overflow-hidden focus:outline-none cursor-pointer"
                   style={{

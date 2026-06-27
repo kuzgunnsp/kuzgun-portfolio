@@ -139,6 +139,47 @@ export default function Hero() {
     const lowerCmd = cmd.toLowerCase();
     const newHistory = [...history, `kuzgun@dev:~$ ${cmd}`];
 
+    if (lowerCmd.startsWith("system init")) {
+      const parts = lowerCmd.split(" ");
+      let accent = "#10b981";
+      let glow = "#10b981";
+      let strength = "1.0";
+      
+      const accentIdx = parts.indexOf("--accent");
+      if (accentIdx !== -1 && accentIdx + 1 < parts.length) {
+        accent = parts[accentIdx + 1];
+      }
+      const glowIdx = parts.indexOf("--glow");
+      if (glowIdx !== -1 && glowIdx + 1 < parts.length) {
+        glow = parts[glowIdx + 1];
+      }
+      const strengthIdx = parts.indexOf("--strength");
+      if (strengthIdx !== -1 && strengthIdx + 1 < parts.length) {
+        strength = parts[strengthIdx + 1];
+      }
+
+      newHistory.push({
+        tr: `Sistem yükleniyor...`,
+        en: `Initializing system...`
+      }, {
+        tr: `> Vurgu rengi: ${accent.toUpperCase()}`,
+        en: `> Accent color: ${accent.toUpperCase()}`
+      }, {
+        tr: `> Parlama rengi: ${glow.toUpperCase()}`,
+        en: `> Glow color: ${glow.toUpperCase()}`
+      }, {
+        tr: `> Parlama yoğunluğu: ${strength}x`,
+        en: `> Glow strength: ${strength}x`
+      }, {
+        tr: `> BAĞLANTI KURULDU - KUZGUN OS AKTİF`,
+        en: `> SYSTEM ENGAGED - KUZGUN OS ACTIVE`
+      });
+      playSuccessSound();
+      setHistory(newHistory);
+      setInput("");
+      return;
+    }
+
     if (lowerCmd === "clear") {
       setHistory([]);
       setInput("");
@@ -348,6 +389,19 @@ export default function Hero() {
       inputRef.current?.focus();
     }
   };
+
+  // Listen to Playground initialization event
+  useEffect(() => {
+    const handleInitSystem = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const cmdStr = `system init --accent ${detail.accent} --glow ${detail.glow} --strength ${detail.strength}`;
+      triggerAutotype(cmdStr);
+    };
+
+    window.addEventListener("kuzgun-init-system", handleInitSystem);
+    return () => window.removeEventListener("kuzgun-init-system", handleInitSystem);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
