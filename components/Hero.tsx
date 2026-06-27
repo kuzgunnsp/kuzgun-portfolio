@@ -15,7 +15,7 @@ export default function Hero() {
   const [isAutotyping, setIsAutotyping] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const terminalScrollContainerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { language, setLanguage, t } = useLanguage();
@@ -47,9 +47,14 @@ export default function Hero() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Terminal scroll ayarı
+  // Terminal scroll ayarı (sayfanın kendisinin aşağı kaymasını önlemek için sadece konteyneri kaydırır)
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (terminalScrollContainerRef.current) {
+      terminalScrollContainerRef.current.scrollTo({
+        top: terminalScrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [history]);
 
   // Matrix efekti canvas animasyonu
@@ -356,7 +361,7 @@ export default function Hero() {
 
               {/* Terminal İçeriği */}
               <div className="relative z-10 w-full h-full flex flex-col justify-between">
-                <div className="flex-1 overflow-y-auto max-h-[160px] sm:max-h-[220px] pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
+                <div ref={terminalScrollContainerRef} className="flex-1 overflow-y-auto max-h-[160px] sm:max-h-[220px] pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
                   {history.map((line, idx) => (
                     <div
                       key={idx}
@@ -373,7 +378,6 @@ export default function Hero() {
                       {line}
                     </div>
                   ))}
-                  <div ref={terminalEndRef} />
                 </div>
 
                 {/* Giriş Satırı */}
